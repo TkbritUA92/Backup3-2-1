@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backup Types Restore Lab: Full vs. Diff vs. Incremental</title>
+    <style>
+        :root {
+            --bg-dark: #0b0f19;
+            --panel-bg: #131c2e;
+            --node-bg: #1e293b;
+            --accent-blue: #0ea5e9;
+            --accent-purple: #a855f7;
+            --accent-green: #22c55e;
+            --accent-orange: #f97316;
+            --accent-red: #ef4444;
+            --text-light: #f8fafc;
+            --text-muted: #64748b;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .lab-wrapper {
+            width: 100%;
+            max-width: 1400px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        header {
+            background-color: var(--panel-bg);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #1e293b;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-info h1 {
+            margin: 0 0 8px 0;
+            font-size: 1.8rem;
+            color: var(--accent-blue);
+        }
+
+        .header-info p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .workspace-grid {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 20px;
+        }
+
+        .panel {
+            background-color: var(--panel-bg);
+            border: 1px solid #1e293b;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .panel-title {
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            border-bottom: 2px solid #1e293b;
+            padding-bottom: 8px;
+            margin-bottom: 5px;
+        }
+
+        .setting-control {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .setting-control label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #cbd5e1;
+        }
+
+        select {
+            width: 100%;
+            background-color: var(--bg-dark);
+            border: 1px solid #334155;
+            color: white;
+            padding: 8px;
+            border-radius: 6px;
+            outline: none;
+        }
+
+        /* Timeline schedule styling */
+        .timeline-container {
+            background-color: rgba(15, 23, 42, 0.4);
+            border: 1px solid #1e293b;
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .week-track {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 12px;
+        }
+
+        .day-node {
+            background-color: var(--node-bg);
+            border: 2px solid #334155;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            user-select: none;
+        }
+
+        .day-node:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+        }
+
+        .day-node.selected {
+            border-color: var(--accent-green);
+            background-color: #064e3b;
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.3);
+        }
+
+        .day-name {
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: #94a3b8;
+            margin-bottom: 6px;
+        }
+
+        .backup-type-tag {
+            font-size: 0.75rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .type-full { background-color: #0284c7; color: white; }
+        .type-diff { background-color: #b45309; color: white; }
+        .type-inc { background-color: #6d28d9; color: white; }
+
+        .data-size {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 8px;
+            font-family: monospace;
+        }
+
+        .terminal-log {
+            background-color: var(--bg-dark);
+            border: 1px solid #1e293b;
+            border-radius: 6px;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            height: 140px;
+            overflow-y: auto;
+            color: #34d399;
+        }
+
+        .action-btn {
+            background-color: var(--accent-blue);
+            color: var(--bg-dark);
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+        }
+
+        .action-btn:hover { opacity: 0.9; }
+
+        /* Modal styling */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top:0; left:0; width:100%; height:100%;
+            background: rgba(7, 10, 19, 0.9);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-card {
+            background-color: var(--panel-bg);
+            border: 2px solid #334155;
+            border-radius: 12px;
+            max-width: 650px;
+            width: 90%;
+            padding: 30px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+        }
+
+        .modal-header {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .modal-body {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #cbd5e1;
+            margin-bottom: 20px;
+        }
+
+        .modal-close {
+            background-color: var(--accent-blue);
+            color: var(--bg-dark);
+            border: none; padding: 10px 20px;
+            border-radius: 6px; font-weight: bold; cursor: pointer;
+        }
+
+        .crash-banner {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px dashed var(--accent-red);
+            color: #fca5a5;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="lab-wrapper">
+        
+        <header>
+            <div class="header-info">
+                <h1>Backup Strategy Recovery Lab</h1>
+                <p>Interactive Reinforcement: Full vs. Differential vs. Incremental Restoration</p>
+            </div>
+            <div>
+                <span class="badge" style="background-color: #1e3a8a; color: #60a5fa; padding: 6px 12px; font-size: 0.85rem;">Session Module 2</span>
+            </div>
+        </header>
+
+        <div class="workspace-grid">
+            
+            <div class="panel">
+                <div class="panel-title">1. Strategy Configuration</div>
+                
+                <div class="setting-control">
+                    <label for="strategy-select">Active Backup Rotation Policy</label>
+                    <select id="strategy-select">
+                        <option value="diff">Strategy A: Sunday Full + Daily Differential</option>
+                        <option value="inc">Strategy B: Sunday Full + Daily Incremental</option>
+                    </select>
+                </div>
+
+                <div class="setting-control">
+                    <label>Operational Execution Log</label>
+                    <div class="terminal-log" id="log-stream">> Storage controller ready. Choose policy context to display rotation map...</div>
+                </div>
+
+                <button class="action-btn" id="btn-verify">Initiate Restore Operations</button>
+                <button class="action-btn" id="btn-clear" style="background-color:#334155; color:white;">Clear Selection</button>
+            </div>
+
+            <div class="panel">
+                <div class="panel-title">2. Scheduled Backup Chain Map</div>
+                
+                <div class="crash-banner">
+                    ⚠️ CRITICAL SYSTEM EVENT: Production Storage Array suffered a hardware head-crash on Friday at 14:00. Production state lost.
+                </div>
+
+                <p style="margin:0; font-size:0.9rem; color:var(--text-muted);">
+                    <strong>Instructions:</strong> Click on the backup media nodes below to build your restoration sequence. You must select the exact chain required to bring the system back to its latest state before the Friday crash while avoiding redundant blocks.
+                </p>
+
+                <div class="timeline-container">
+                    <div class="week-track" id="timeline-grid">
+                        </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="result-modal">
+        <div class="modal-card">
+            <div class="modal-header" id="m-header">Restoration Sequence Audit</div>
+            <div class="modal-body" id="m-body">Processing storage sequence data indexes...</div>
+            <div style="text-align: right;">
+                <button class="modal-close" onclick="closeModal()">Modify Sequence Matrix</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data block metadata defining daily storage footprint changes
+        const backupDataMatrix = {
+            diff: [
+                { id: "sun", day: "Sunday", type: "Full", size: "500 GB", changes: "Base baseline dataset snapshot" },
+                { id: "mon", day: "Monday", type: "Differential", size: "45 GB", changes: "All modifications since Sunday" },
+                { id: "tue", day: "Tuesday", type: "Differential", size: "85 GB", changes: "All modifications since Sunday" },
+                { id: "wed", day: "Wednesday", type: "Differential", size: "120 GB", changes: "All modifications since Sunday" },
+                { id: "thu", day: "Thursday", type: "Differential", size: "165 GB", changes: "All modifications since Sunday" },
+                { id: "fri", day: "Friday (11am)", type: "Differential", size: "210 GB", changes: "All modifications since Sunday pre-crash" }
+            ],
+            inc: [
+                { id: "sun", day: "Sunday", type: "Full", size: "500 GB", changes: "Base baseline dataset snapshot" },
+                { id: "mon", day: "Monday", type: "Incremental", size: "45 GB", changes: "Modifications made on Monday only" },
+                { id: "tue", day: "Tuesday", type: "Incremental", size: "40 GB", changes: "Modifications made on Tuesday only" },
+                { id: "wed", day: "Wednesday", type: "Incremental", size: "35 GB", changes: "Modifications made on Wednesday only" },
+                { id: "thu", day: "Thursday", type: "Incremental", size: "45 GB", changes: "Modifications made on Thursday only" },
+                { id: "fri", day: "Friday (11am)", type: "Incremental", size: "45 GB", changes: "Modifications made on Friday morning only" }
+            ]
+        };
+
+        let selectedNodes = new Set();
+        const strategySelect = document.getElementById('strategy-select');
+        const timelineGrid = document.getElementById('timeline-grid');
+        const logStream = document.getElementById('log-stream');
+        const btnVerify = document.getElementById('btn-verify');
+        const btnClear = document.getElementById('btn-clear');
+
+        // Render the interactive timeline grid map dynamically based on selected option
+        function renderTimeline() {
+            timelineGrid.innerHTML = '';
+            selectedNodes.clear();
+            const currentStrategy = strategySelect.value;
+            const dataset = backupDataMatrix[currentStrategy];
+
+            dataset.forEach(item => {
+                const node = document.createElement('div');
+                node.className = 'day-node';
+                node.setAttribute('data-id', item.id);
+                
+                let tagClass = item.type === 'Full' ? 'type-full' : (item.type === 'Differential' ? 'type-diff' : 'type-inc');
+                
+                node.innerHTML = `
+                    <div class="day-name">${item.day}</div>
+                    <span class="backup-type-tag ${tagClass}">${item.type}</span>
+                    <div class="data-size">${item.size}</div>
+                    <div class="hint-text" style="display:none; font-size:0.7rem; color:var(--accent-orange); margin-top:6px;">
+                        Contains: ${item.changes}
+                    </div>
+                `;
+
+                // Hover style hook for embedded tooltips
+                node.addEventListener('mouseenter', () => { node.querySelector('.hint-text').style.display = 'block'; });
+                node.addEventListener('mouseleave', () => { node.querySelector('.hint-text').style.display = 'none'; });
+
+                node.addEventListener('click', () => {
+                    if (node.classList.contains('selected')) {
+                        node.classList.remove('selected');
+                        selectedNodes.delete(item.id);
+                        writeLog(`Tape removed: De-selected ${item.day} archive recovery point.`);
+                    } else {
+                        node.classList.add('selected');
+                        selectedNodes.add(item.id);
+                        writeLog(`Tape mounted: Staging ${item.day} [${item.type}] volume into recovery stream.`);
+                    }
+                });
+
+                timelineGrid.appendChild(node);
+            });
+        }
+
+        function writeLog(message) {
+            const timestamp = new Date().toISOString().slice(11, 19);
+            logStream.innerHTML += `<br>[${timestamp}] ${message}`;
+            logStream.scrollTop = logStream.scrollHeight;
+        }
+
+        strategySelect.addEventListener('change', () => {
+            renderTimeline();
+            writeLog(`Rotation Shift: Switched context grid to display execution map for [${strategySelect.options[strategySelect.selectedIndex].text}].`);
+        });
+
+        btnClear.addEventListener('click', () => {
+            document.querySelectorAll('.day-node').forEach(n => n.classList.remove('selected'));
+            selectedNodes.clear();
+            writeLog("Clear Complete: Active recovery media set reset to zero baseline.");
+        });
+
+        // Main Evaluation Logic Checking for Proper Chains
+        btnVerify.addEventListener('click', () => {
+            const currentStrategy = strategySelect.value;
+            const modal = document.getElementById('result-modal');
+            const header = document.getElementById('m-header');
+            const body = document.getElementById('m-body');
+
+            let isSuccess = false;
+            let feedback = "";
+
+            if (currentStrategy === 'diff') {
+                // Differential Strategy Correct Answer: Sunday (Full) + Friday (Differential)
+                const hasSun = selectedNodes.has('sun');
+                const hasFri = selectedNodes.has('fri');
+                const totalSelected = selectedNodes.size;
+
+                if (hasSun && hasFri && totalSelected === 2) {
+                    isSuccess = true;
+                    feedback = `<strong>RESTORE SUCCESS! (Optimal Chain Verified)</strong><br><br>
+                    Your sequence is correct. Because a **Differential Backup** captures <em>all data changes since the last Full baseline</em>, you only need to mount the Sunday Full tape and the latest Friday Differential tape.<br><br>
+                    • <strong>Total Media Volumes Processed:</strong> 2 Tapes mounted.<br>
+                    • <strong>Restore Overhead:</strong> Low network load. You successfully skipped Monday through Thursday, avoiding redundant restructures.`;
+                } else if (hasSun && hasFri && totalSelected > 2) {
+                    feedback = `<strong>RESTORE COMPLETED (But Sub-Optimal Configuration)</strong><br><br>
+                    The data was recovered, but your architecture failed efficiency checks. You included mid-week differential tapes (Monday-Thursday).<br><br>
+                    ⚠️ <strong>Redundancy Alert:</strong> Since Wednesday's differential already contains all modifications from Monday and Tuesday, processing mid-week tapes wastes time and replicates blocks. You only need the **Full baseline + the latest cumulative volume**.`;
+                } else if (hasSun && !hasFri) {
+                    feedback = `<strong>RESTORE CRASHED: INCOMPLETE DATASET</strong><br><br>
+                    ❌ Recovery Failed. You mounted the Sunday Full baseline database, but you left out the latest Friday differential tape volume. Your data state is stuck 5 days out of date, resulting in severe transactional business losses.`;
+                } else {
+                    feedback = `<strong>RESTORE CRASHED: BROKEN BASELINE</strong><br><br>
+                    ❌ Critical Execution Error. You cannot process differential modification tapes without mounting the original **Sunday Full Backup** snapshot first. The storage recovery engine has nothing to anchor the delta points to.`;
+                }
+            } else if (currentStrategy === 'inc') {
+                // Incremental Strategy Correct Answer: All items must be chosen sequentially (Sunday + Mon + Tue + Wed + Thu + Fri)
+                const hasAll = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri'].every(id => selectedNodes.has(id));
+                const totalSelected = selectedNodes.size;
+
+                if (hasAll && totalSelected === 6) {
+                    isSuccess = true;
+                    feedback = `<strong>RESTORE SUCCESS! (Full Sequential Chain Restored)</strong><br><br>
+                    Your sequence is correct. Because an **Incremental Backup** captures <em>only the block updates made since the immediate previous backup</em>, you must re-play every single interval in the exact order they occurred.<br><br>
+                    • <strong>Total Media Volumes Processed:</strong> 6 Tapes required.<br>
+                    • <strong>System Cost Note:</strong> Incremental strategy keeps the daily backup times incredibly fast and small, but requires more storage management overhead during a disaster recovery lifecycle. If any mid-week tape is lost, the chain is broken!`;
+                } else if (selectedNodes.has('sun') && selectedNodes.has('fri') && totalSelected === 2) {
+                    feedback = `<strong>RESTORE CRASHED: CORRUPT DELTA STRUCTURE</strong><br><br>
+                    ❌ Critical Logic Gap. You selected Sunday and Friday only. Because this rotation relies on **Incremental logs**, Friday's backup only contains changes made between Thursday morning and Friday morning. You are missing all data additions from Monday, Tuesday, Wednesday, and Thursday.`;
+                } else if (selectedNodes.has('sun') && totalSelected < 6) {
+                    feedback = `<strong>RESTORE CRASHED: BROKEN LOG CHAIN</strong><br><br>
+                    ❌ Data Loss Event. You missed steps in the sequential execution pipeline. An incremental structure acts like links in a chain—if you miss even one single day (e.g., leaving out Tuesday), the recovery engine cannot calculate data locations for the following days.`;
+                } else {
+                    feedback = `<strong>RESTORE CRASHED: BROKEN BASELINE</strong><br><br>
+                    ❌ Logic Execution Error. Every backup type strategy requires the **Initial Full Backup Baseline** to anchor the filesystem before applying delta tracks.`;
+                }
+            }
+
+            header.innerText = isSuccess ? "🟢 Strategy Verification Passed" : "🔴 Restoration Chain Failed Audit";
+            header.style.color = isSuccess ? "var(--accent-green)" : "var(--accent-red)";
+            body.innerHTML = feedback;
+            modal.style.display = 'flex';
+        });
+
+        function closeModal() {
+            document.getElementById('result-modal').style.display = 'none';
+        }
+
+        // Initialize execution grid on window load
+        window.onload = renderTimeline;
+    </script>
+</body>
+</html>
