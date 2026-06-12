@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enterprise 3-2-1 Data Protection Architecture Lab</title>
+    <title>Sovereign Multi-Region Data Protection Lab</title>
     <style>
         :root {
             --bg-dark: #0b0f19;
@@ -32,7 +32,7 @@
 
         .lab-wrapper {
             width: 100%;
-            max-width: 1400px;
+            max-width: 1450px;
             display: flex;
             flex-direction: column;
             gap: 20px;
@@ -62,7 +62,7 @@
 
         .workspace-grid {
             display: grid;
-            grid-template-columns: 340px 1fr 340px;
+            grid-template-columns: 350px 1fr 350px;
             gap: 20px;
         }
 
@@ -103,12 +103,28 @@
             display: flex;
             flex-direction: column;
             gap: 6px;
+            position: relative;
         }
 
         .setting-control label {
             font-size: 0.85rem;
             font-weight: 600;
             color: #cbd5e1;
+        }
+
+        .hint-text {
+            display: none;
+            font-size: 0.75rem;
+            color: var(--accent-orange);
+            background: rgba(249, 115, 22, 0.1);
+            border: 1px solid rgba(249, 115, 22, 0.3);
+            padding: 6px;
+            border-radius: 4px;
+            margin-top: 2px;
+        }
+
+        .setting-control:hover .hint-text, .node:hover .hint-text {
+            display: block;
         }
 
         select, input[type="range"] {
@@ -138,7 +154,7 @@
             gap: 12px;
         }
 
-        .zone.local-zone { border-color: #475569; }
+        .zone.local-zone { border-color: var(--accent-blue); }
         .zone.remote-zone { border-color: var(--accent-purple); }
 
         .zone-header {
@@ -146,6 +162,15 @@
             font-weight: 700;
             color: #94a3b8;
             text-transform: uppercase;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .region-badge {
+            font-size: 0.7rem;
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-weight: bold;
         }
 
         .node {
@@ -178,6 +203,7 @@
             color: var(--text-muted);
             display: flex;
             gap: 8px;
+            margin-bottom: 4px;
         }
 
         .badge {
@@ -233,7 +259,7 @@
             padding: 10px;
             font-family: monospace;
             font-size: 0.8rem;
-            height: 150px;
+            height: 160px;
             overflow-y: auto;
             color: #34d399;
         }
@@ -304,24 +330,26 @@
         
         <header>
             <div class="header-info">
-                <h1>Enterprise Data Protection Resiliency Lab</h1>
-                <p>Interactive 3-2-1 Compliance Sandbox & Disaster Drill Engine</p>
+                <h1>Sovereign Multi-Region Data Protection Lab</h1>
+                <p>UK & EU Compliance Architecture Validation Sandbox</p>
             </div>
             <div>
-                <span class="badge" style="background-color: #2e1065; color: #c084fc; padding: 6px 12px; font-size: 0.85rem;">Sandbox Version: 2026.2</span>
+                <span class="badge" style="background-color: #2e1065; color: #c084fc; padding: 6px 12px; font-size: 0.85rem;">Sovereign Version: 2026.4</span>
             </div>
         </header>
 
         <div class="workspace-grid">
             
+            <!-- LEFT PANEL: Policy Controls -->
             <div class="panel">
-                <div class="panel-title">1. Policy Options & Controls</div>
+                <div class="panel-title">1. Sovereign Policy Configuration</div>
                 
                 <div class="setting-control">
-                    <label>Data Payload Module (Drag Source)</label>
+                    <label>Data Payload Module</label>
                     <div style="background: rgba(15,23,42,0.5); padding: 12px; border-radius: 8px; border: 1px dashed #334155; text-align: center;">
-                        <div class="data-token" draggable="true" id="source-payload">📦 Production_DB.sql</div>
+                        <div class="data-token" draggable="true" id="source-payload">📦 Core_Sovereign_Data.db</div>
                     </div>
+                    <div class="hint-text">💡 Hint: Drag this primary database element down into both geographic regions below to design compliance coverage.</div>
                 </div>
 
                 <div class="setting-control">
@@ -330,6 +358,7 @@
                         <option value="disabled">Disabled (Standard Modifiable Writes)</option>
                         <option value="enabled">Enabled (Object Lock / Compliance Mode)</option>
                     </select>
+                    <div class="hint-text">💡 Hint: Cryptographic ransomware strains cannot execute multi-sector encryption loops on write-locked compliance layers.</div>
                 </div>
 
                 <div class="setting-control">
@@ -340,68 +369,87 @@
                         <span id="retention-val" style="color:var(--accent-blue)">7 Days rotation</span>
                         <span>30 Days</span>
                     </div>
+                    <div class="hint-text">💡 Hint: Shorter rotations minimize recovery limits but add transactional cross-border operational stress.</div>
                 </div>
 
                 <div class="setting-control">
-                    <label for="setting-crr">Cross-Region Replication (CRR)</label>
+                    <label for="setting-crr">Cross-Region Replication (UK ⇄ EU)</label>
                     <select id="setting-crr">
-                        <option value="disabled">Disabled (Single Target Region)</option>
-                        <option value="enabled">Enabled (Multi-Region Geo-Redundancy)</option>
+                        <option value="disabled">Disabled (Single Jurisdiction Isolation)</option>
+                        <option value="enabled">Enabled (Inter-Region Cross-Replication)</option>
                     </select>
+                    <div class="hint-text">💡 Hint: Automatically syncs data modifications between UK and Europe regions. Requires active nodes running in *both* grids.</div>
                 </div>
 
                 <div class="setting-control">
                     <label for="setting-mfa">MFA Delete Restriction</label>
                     <select id="setting-mfa">
-                        <option value="disabled">Disabled (Root can delete via script)</option>
-                        <option value="enabled">Enabled (Requires Hardware Token)</option>
+                        <option value="disabled">Disabled (Standard API Deletions Allowed)</option>
+                        <option value="enabled">Enabled (Requires Out-of-Band Hardware Token)</option>
                     </select>
+                    <div class="hint-text">💡 Hint: Protects storage histories against stolen infrastructure credentials or rogue insider engineers.</div>
                 </div>
             </div>
 
+            <!-- CENTER PANEL: Multi-Region Topology Grid -->
             <div class="panel" style="gap: 15px;">
-                <div class="panel-title">2. Storage Target Topology Infrastructure</div>
+                <div class="panel-title">2. Geo-Distributed Storage Targets</div>
                 
                 <div class="infra-grid">
-                    <div class="zone local-zone">
-                        <div class="zone-header">HQ Primary Zone (On-Site)</div>
+                    <!-- UNITED KINGDOM GRID -->
+                    <div class="zone local-zone" id="zone-uk">
+                        <div class="zone-header">
+                            <span>UK Jurisdiction</span>
+                            <span class="region-badge" style="background:#0284c7; color:white;">UK-WEST-1</span>
+                        </div>
                         
-                        <div class="node" data-id="n1" data-media="Disk" data-loc="local">
-                            <div class="node-name">SAN Array Tier-0</div>
-                            <div class="node-meta"><span class="badge">Media: NVMe SSD</span></div>
+                        <div class="node" data-id="n1" data-media="Disk" data-reg="uk">
+                            <div class="node-name">London Edge SAN</div>
+                            <div class="node-meta"><span class="badge">Media: NVMe Arrays</span></div>
+                            <div class="hint-text">💡 High performance local flash layer inside London availability borders. No native regional protection.</div>
                         </div>
 
-                        <div class="node" data-id="n2" data-media="Disk" data-loc="local">
-                            <div class="node-name">On-Premises NAS</div>
-                            <div class="node-meta"><span class="badge">Media: HDD RAID6</span></div>
+                        <div class="node" data-id="n2" data-media="Disk" data-reg="uk">
+                            <div class="node-name">Manchester NAS Mirror</div>
+                            <div class="node-meta"><span class="badge">Media: HDD Array</span></div>
+                            <div class="hint-text">💡 Connected replication node sitting on secondary UK telecom lines. Safe from local London disasters.</div>
                         </div>
 
-                        <div class="node" data-id="n3" data-media="Tape" data-loc="local">
-                            <div class="node-name">Local LTO Tape Library</div>
+                        <div class="node" data-id="n3" data-media="Tape" data-reg="uk">
+                            <div class="node-name">UK Automated Tape Vault</div>
                             <div class="node-meta"><span class="badge">Media: LTO-9 Magnetic</span></div>
+                            <div class="hint-text">💡 On-shore physical offline tier. Shielded from active network breaches.</div>
                         </div>
                     </div>
 
-                    <div class="zone remote-zone">
-                        <div class="zone-header">Isolated Recovery Zone (Off-Site)</div>
+                    <!-- EUROPEAN UNION GRID -->
+                    <div class="zone remote-zone" id="zone-eu">
+                        <div class="zone-header">
+                            <span>EU Jurisdiction</span>
+                            <span class="region-badge" style="background:#7c3aed; color:white;">EU-CENTRAL-1</span>
+                        </div>
                         
-                        <div class="node" data-id="n4" data-media="Cloud" data-loc="remote">
-                            <div class="node-name">Amazon S3 Standard</div>
-                            <div class="node-meta"><span class="badge">Media: Object Storage</span></div>
+                        <div class="node" data-id="n4" data-media="Cloud" data-reg="eu">
+                            <div class="node-name">Frankfurt S3 Endpoint</div>
+                            <div class="node-meta"><span class="badge">Media: Cloud Object</span></div>
+                            <div class="hint-text">💡 Sovereign EU cloud instance bucket tier. Governed strictly under continental legal frameworks.</div>
                         </div>
 
-                        <div class="node" data-id="n5" data-media="Cloud" data-loc="remote">
-                            <div class="node-name">AWS Backup S3 Vault</div>
-                            <div class="node-meta"><span class="badge">Media: Immutable Object</span></div>
+                        <div class="node" data-id="n5" data-media="Cloud" data-reg="eu">
+                            <div class="node-name">Paris Backup Vault</div>
+                            <div class="node-meta"><span class="badge">Media: Hardened Cloud</span></div>
+                            <div class="hint-text">💡 Isolated regional backup target with built-in infrastructure decoupling controls.</div>
                         </div>
 
-                        <div class="node" data-id="n6" data-media="Tape" data-loc="remote">
-                            <div class="node-name">Deep Vaults (Offsite Tape)</div>
-                            <div class="node-meta"><span class="badge">Media: Air-Gapped Tape</span></div>
+                        <div class="node" data-id="n6" data-media="Tape" data-reg="eu">
+                            <div class="node-name">Offsite Tape (Rotterdam)</div>
+                            <div class="node-meta"><span class="badge">Media: Shipped Archive</span></div>
+                            <div class="hint-text">💡 Air-gapped tape layers stored in deep continental security facilities. Long-term safety layer.</div>
                         </div>
                     </div>
                 </div>
 
+                <!-- Sovereign Compliance Scoreboard -->
                 <div class="scorecard-grid">
                     <div class="score-box" id="card-copies">
                         <div style="font-size:0.75rem; color:var(--text-muted);">COPIES (Min 3)</div>
@@ -411,39 +459,41 @@
                         <div style="font-size:0.75rem; color:var(--text-muted);">MEDIA TYPES (Min 2)</div>
                         <div class="score-val" id="val-media">0</div>
                     </div>
-                    <div class="score-box" id="card-offsite">
-                        <div style="font-size:0.75rem; color:var(--text-muted);">OFF-SITE (Min 1)</div>
-                        <div class="score-val" id="val-offsite">0</div>
+                    <div class="score-box" id="card-sovereign">
+                        <div style="font-size:0.75rem; color:var(--text-muted);">GEO-DIVERSITY</div>
+                        <div class="score-val" id="val-sovereign">0/2 Reg</div>
                     </div>
                 </div>
             </div>
 
+            <!-- RIGHT PANEL: Threat Matrix & Triggers -->
             <div class="panel">
-                <div class="panel-title">3. Threat Matrix Engine</div>
+                <div class="panel-title">3. Threat Matrix Injector</div>
                 
                 <div class="setting-control">
-                    <label for="setting-threat">Inject Disaster Attack Vector</label>
+                    <label for="setting-threat">Inject Crisis Attack Vector</label>
                     <select id="setting-threat">
                         <option value="ransomware">LockBit Ransomware (Lateral Propagation)</option>
-                        <option value="flood">Catastrophic Datacenter Flash Flood</option>
-                        <option value="insider">Malicious Insider (Credential Leak Event)</option>
-                        <option value="regional">AWS Regional Outage (US-EAST-1 Failure)</option>
+                        <option value="flood">Catastrophic London Data Center Flood</option>
+                        <option value="insider">Malicious Insider (Global Account Wipe)</option>
+                        <option value="regional">Grid Failure (UK Power Outage Blackout)</option>
                     </select>
+                    <div class="hint-text">💡 Hint: Inter-region configuration profiles determine if service can survive isolated geopolitical or physical structural failures.</div>
                 </div>
 
                 <div class="setting-control">
                     <label>System Live Execution Stream</label>
-                    <div class="terminal-log" id="log-stream">> Infrastructure online. Mount payload to map topology...</div>
+                    <div class="terminal-log" id="log-stream">> Sovereign landscape initialized. Ready to map topology...</div>
                 </div>
 
                 <button class="action-btn" id="btn-simulate">Fire Disaster Simulation Drill</button>
-                
                 <button class="action-btn" id="btn-reset" style="background-color:#334155; color:white;">Clear Infrastructure Grid</button>
             </div>
 
         </div>
     </div>
 
+    <!-- Results Modal Display Container -->
     <div class="modal-overlay" id="drill-modal">
         <div class="modal-card">
             <div class="modal-header" id="m-header">Drill Execution Completed</div>
@@ -471,12 +521,26 @@
 
         retentionSlider.addEventListener('input', (e) => {
             retentionVal.innerText = `${e.target.value} Days rotation`;
-            writeLog(`System: Modified rotational gap window threshold to ${e.target.value} days.`);
+            writeLog(`System: Rotational gap threshold set to ${e.target.value} days.`);
         });
 
-        optImmutable.addEventListener('change', (e) => writeLog(`Policy: Immutable storage status set to [${e.target.value.toUpperCase()}].`));
-        optCrr.addEventListener('change', (e) => writeLog(`Policy: Cross-Region Replication parameter set to [${e.target.value.toUpperCase()}].`));
-        optMfa.addEventListener('change', (e) => writeLog(`Policy: MFA Delete safeguard validation status set to [${e.target.value.toUpperCase()}].`));
+        optImmutable.addEventListener('change', (e) => writeLog(`Policy: Sovereign immutability token set to [${e.target.value.toUpperCase()}].`));
+        
+        optCrr.addEventListener('change', (e) => {
+            if (e.target.value === 'enabled') {
+                const hasUk = Object.values(infrastructureState).some(n => n.reg === 'uk');
+                const hasEu = Object.values(infrastructureState).some(n => n.reg === 'eu');
+                
+                if (!hasUk || !hasEu) {
+                    writeLog(`❌ Inter-Region Block: Cross-Region Replication requires active target endpoints in both UK and EU jurisdictions concurrently.`);
+                    e.target.value = 'disabled';
+                    return;
+                }
+            }
+            writeLog(`Policy: Inter-Region Cross-Replication toggled to [${e.target.value.toUpperCase()}].`);
+        });
+
+        optMfa.addEventListener('change', (e) => writeLog(`Policy: MFA operational rule updated to [${e.target.value.toUpperCase()}].`));
 
         payloadToken.addEventListener('dragstart', (e) => e.dataTransfer.setData('text/plain', 'payload'));
 
@@ -497,15 +561,15 @@
                     infrastructureState[id] = {
                         name: node.querySelector('.node-name').innerText,
                         media: node.getAttribute('data-media'),
-                        loc: node.getAttribute('data-loc')
+                        reg: node.getAttribute('data-reg')
                     };
                     node.classList.add('occupied');
                     const tag = document.createElement('div');
                     tag.className = 'copy-tag';
-                    tag.innerText = 'Active Backup Copy';
+                    tag.innerText = 'Active Instance';
                     node.appendChild(tag);
 
-                    writeLog(`Data Routing: Successfully mapped active payload segment to [${infrastructureState[id].name}].`);
+                    writeLog(`Data Mapping: Synchronized instance pipeline to node [${infrastructureState[id].name}].`);
                     evaluateMatrixMetrics();
                 }
             });
@@ -515,22 +579,22 @@
             const keys = Object.keys(infrastructureState);
             const totalCopies = keys.length;
             const mediaTypes = new Set();
-            let remoteCount = 0;
+            const regions = new Set();
 
             keys.forEach(k => {
                 mediaTypes.add(infrastructureState[k].media);
-                if (infrastructureState[k].loc === 'remote') remoteCount++;
+                regions.add(infrastructureState[k].reg);
             });
 
             document.getElementById('val-copies').innerText = totalCopies;
             document.getElementById('val-media').innerText = mediaTypes.size;
-            document.getElementById('val-offsite').innerText = remoteCount;
+            document.getElementById('val-sovereign').innerText = `${regions.size} / 2 Reg`;
 
             toggleMetricBoxPass('card-copies', totalCopies >= 3);
             toggleMetricBoxPass('card-media', mediaTypes.size >= 2);
-            toggleMetricBoxPass('card-offsite', remoteCount >= 1);
+            toggleMetricBoxPass('card-sovereign', regions.size >= 2);
 
-            return { totalCopies, mediaCount: mediaTypes.size, remoteCount };
+            return { totalCopies, mediaCount: mediaTypes.size, regionCount: regions.size };
         }
 
         function toggleMetricBoxPass(elementId, isPassing) {
@@ -552,8 +616,11 @@
                 const tag = node.querySelector('.copy-tag');
                 if (tag) tag.remove();
             });
+            optCrr.value = 'disabled';
+            optImmutable.value = 'disabled';
+            optMfa.value = 'disabled';
             evaluateMatrixMetrics();
-            writeLog("System: Target node operational architecture arrays fully purged.");
+            writeLog("System: Clear sequence ran. Multi-region landscape at baseline.");
         });
 
         btnSimulate.addEventListener('click', () => {
@@ -563,7 +630,7 @@
             const isCrr = optCrr.value === 'enabled';
             const isMfa = optMfa.value === 'enabled';
             
-            writeLog(`CRITICAL: Deploying incident drill vectors [${selectedThreat.toUpperCase()}] against landscape...`);
+            writeLog(`ALERT: Deploying event drill profiles against system grids...`);
 
             const modal = document.getElementById('drill-modal');
             const h = document.getElementById('m-header');
@@ -571,80 +638,103 @@
 
             const has3Copies = metrics.totalCopies >= 3;
             const has2Media = metrics.mediaCount >= 2;
-            const has1Offsite = metrics.remoteCount >= 1;
-            const strictCompliance = has3Copies && has2Media && has1Offsite;
+            const hasGeoDiversity = metrics.regionCount >= 2;
+            const fullCompliance = has3Copies && has2Media && hasGeoDiversity;
 
             let statusTitle = "";
             let htmlReport = "";
             let rto = "Infinite";
             let rpo = "Infinite";
 
-            if (selectedThreat === 'flood') {
-                if (has1Offsite) {
-                    statusTitle = "🟢 STRATEGY RESILIENT (Local Failure)";
-                    h.style.color = "var(--accent-green)";
-                    rto = "4 Hours"; rpo = "1 Hour";
-                    htmlReport = `<strong>Incident Scope:</strong> A water pipe bursts in the primary data center. All local systems short circuit.<br><br>
-                    <strong>Recovery Validation:</strong> SUCCESS. Your off-site nodes were safe. Data restoration triggered cleanly from cloud endpoints.`;
+            // SURPRISE EVENT GENERATOR MATRIX
+            const rollSurprise = Math.random() < 0.45; // 45% chance of rolling an unpredictable infrastructure failure override
+            
+            if (rollSurprise && Object.keys(infrastructureState).length > 0) {
+                const surpriseRoll = Math.random();
+                if (surpriseRoll < 0.5) {
+                    // Surprise Incident 1: Space Weather Solar Burst Flare
+                    statusTitle = "💥 UNPREDICTABLE INCIDENT: Solar Flare Event";
+                    h.style.color = "var(--accent-orange)";
+                    rto = "72 Hours"; rpo = "Last Physical Sync";
+                    
+                    htmlReport = `<strong>Incident Vector:</strong> An unpredicted coronal mass ejection hits European tracking skies, generating localized geomagnetic induced currents. Offline tape libraries and local unshielded components suffer static magnetic interference faults.<br><br>
+                    <strong>Recovery Validation:</strong> CRR CRITICAL SAVE. Your local physical tape libraries suffered metadata corruption. However, because you maintained active cloud object repositories running across secure, isolated data centers, your online storage arrays avoided radiation interference. System failover executed successfully.`;
+                    
+                    b.innerHTML = htmlReport;
+                    modal.style.display = 'flex';
+                    writeLog("🚨 CRITICAL CRASH: Geomagnetic solar activity detected. Analyzing system structural degradation...");
+                    return;
                 } else {
-                    statusTitle = "🔴 TOTAL DATA LOSS (No Off-site Node)";
+                    // Surprise Incident 2: Maritime North Sea Undersea Fiber Severance
+                    statusTitle = "⚓ UNPREDICTABLE INCIDENT: Undersea Fiber Severance";
+                    h.style.color = "var(--accent-orange)";
+                    rto = "12 Hours"; rpo = "Pre-Incident Sync";
+                    
+                    htmlReport = `<strong>Incident Vector:</strong> A maritime commercial vessel accidentally drags its anchor line along the seabed floor in the English Channel, severing primary fiber-optic trunking lines between London and Frankfurt.<br><br>
+                    <strong>Recovery Validation:</strong> SOVEREIGN ISOLATION TEST. Inter-region networks dropped instantly, freezing live cross-border synchronization queues. Because you maintained fully decoupled, standalone localized backup architectures within the UK boundary, operations continued in an isolated local state without dependency loops.`;
+                    
+                    b.innerHTML = htmlReport;
+                    modal.style.display = 'flex';
+                    writeLog("🚨 CRITICAL DISCONNECT: Inter-region transit trunks severed. Entering emergency localized operation status...");
+                    return;
+                }
+            }
+
+            // CORE LAB EVALUATION CODE MATRICES
+            if (selectedThreat === 'flood') {
+                if (hasGeoDiversity) {
+                    statusTitle = "🟢 STRATEGY RESILIENT (UK Outage - EU Active)";
+                    h.style.color = "var(--accent-green)";
+                    rto = "2 Hours"; rpo = "Near-Zero";
+                    htmlReport = `<strong>Incident Scope:</strong> Massive flooding takes out primary facilities in London. The UK storage nodes fail completely.<br><br>
+                    <strong>Recovery Validation:</strong> SUCCESS. Adhering to geo-diversity guidelines saved operations. European nodes (Frankfurt/Paris) immediately assumed primary transaction roles.`;
+                } else {
+                    statusTitle = "🔴 TOTAL SOVEREIGN LOSS (No EU Geo-redundancy)";
                     h.style.color = "var(--accent-red)";
-                    htmlReport = `<strong>Incident Scope:</strong> Flooding destroyed local assets.<br><br>
-                    <strong>Recovery Validation:</strong> CRITICAL FAILURE. All copies were in one room. No data survived.`;
+                    htmlReport = `<strong>Incident Scope:</strong> London flooding destroyed local SAN and NAS arrays.<br><br>
+                    <strong>Recovery Validation:</strong> AUDIT FAILURE. You grouped all resources inside one country's borders. With no off-shore replication targets active, your data vanished.`;
                 }
             } 
             else if (selectedThreat === 'ransomware') {
-                if (strictCompliance && isWorm) {
-                    statusTitle = "🟢 ATTACK CONTAINED (WORM Protected)";
+                if (fullCompliance && isWorm) {
+                    statusTitle = "🟢 INFRASTRUCTURE SECURED (WORM Enforced)";
                     h.style.color = "var(--accent-green)";
-                    rto = "2 Hours"; rpo = "Real-time";
-                    htmlReport = `<strong>Incident Scope:</strong> Ransomware encrypted standard files across network drives.<br><br>
-                    <strong>Recovery Validation:</strong> SUCCESS. Because your **WORM configuration was enabled**, the malware could not overwrite historic backups. Reversion executed seamlessly.`;
-                } else if (strictCompliance && !isWorm) {
-                    statusTitle = "🟡 EXTENSIVE DATA DAMAGE (No Immutability)";
-                    h.style.color = "var(--accent-orange)";
-                    rto = "48 Hours"; rpo = "24 Hours";
-                    htmlReport = `<strong>Incident Scope:</strong> Ransomware encrypted local folders and connected cloud write channels.<br><br>
-                    <strong>Recovery Validation:</strong> MIXED RESULTS. While you had 3 copies, the absence of WORM or an explicit Air-Gap allowed the threat script to alter your secondary backups.`;
+                    rto = "1 Hour"; rpo = "Real-time";
+                    htmlReport = `<strong>Incident Scope:</strong> Ransomware targets your cluster. It attempts to overwrite connected drives across borders.<br><br>
+                    <strong>Recovery Validation:</strong> SUCCESS. The system blocked write attempts on your S3 Vault blocks because **WORM immutability policies were strictly turned on**. Malicious modification was physically impossible.`;
                 } else {
-                    statusTitle = "🔴 ENTIRE ECOSYSTEM ENCRYPTED";
+                    statusTitle = "🔴 GLOBAL CROSS-BORDER ENCRYPTION";
                     h.style.color = "var(--accent-red)";
-                    htmlReport = `<strong>Incident Scope:</strong> Fast malware spread across single-tier layouts.<br><br>
-                    <strong>Recovery Validation:</strong> CRITICAL FAILURE. Topology structure lacked decoupling metrics.`;
+                    htmlReport = `<strong>Incident Scope:</strong> Ransomware encrypts standard partitions and propagates via active network lanes directly into connected European targets.<br><br>
+                    <strong>Recovery Validation:</strong> COMPROMISED. Without WORM locks enabled, your secondary cloud replication targets were overwritten by the encryption script.`;
                 }
             } 
             else if (selectedThreat === 'insider') {
-                if (strictCompliance && isMfa) {
-                    statusTitle = "🟢 MALICIOUS ACTION DEFLECTED (MFA Checked)";
+                if (fullCompliance && isMfa) {
+                    statusTitle = "🟢 ATTEMPT BLOCKED (Hardware Token Checked)";
                     h.style.color = "var(--accent-green)";
-                    rto = "1 Hour"; rpo = "Near-Zero";
-                    htmlReport = `<strong>Incident Scope:</strong> A rogue engineer used leaked credentials to run a global delete loop.<br><br>
-                    <strong>Recovery Validation:</strong> SUCCESS. The system blocked the deletion command on your cloud backup vaults because it **lacked the hardware MFA Token code**.`;
+                    rto = "Immediate"; rpo = "Zero Data Loss";
+                    htmlReport = `<strong>Incident Scope:</strong> A rogue employee uses stolen keys to clear the global backup landscape.<br><br>
+                    <strong>Recovery Validation:</strong> SUCCESS. The cloud architecture rejected the deletion command on your repositories because it **demanded an out-of-band hardware MFA code** that the bad actor did not possess.`;
                 } else {
-                    statusTitle = "🔴 TOTAL SYSTEM WIPE (No MFA Delete Protection)";
+                    statusTitle = "🔴 SYSTEM WIPE (No MFA Delete Active)";
                     h.style.color = "var(--accent-red)";
-                    htmlReport = `<strong>Incident Scope:</strong> Compromised root access cleared active tracking indexes.<br><br>
-                    <strong>Recovery Validation:</strong> CRITICAL FAILURE. Without an MFA Delete restriction or an immutable block, administrative rights were weaponized to format the entire backup history.`;
+                    htmlReport = `<strong>Incident Scope:</strong> Insider threat successfully calls a programmatic wipe of all connected accounts.<br><br>
+                    <strong>Recovery Validation:</strong> STRATEGIC FAILURE. Admin keys had the absolute power to clear all storage targets across both UK and European sites.`;
                 }
             } 
             else if (selectedThreat === 'regional') {
-                if (strictCompliance && isCrr) {
-                    statusTitle = "🟢 MULTI-REGION FAILOVER ACTIVE";
+                if (fullCompliance && isCrr) {
+                    statusTitle = "🟢 AUTOMATIC GEOGRAPHIC FAILOVER ACTIVE";
                     h.style.color = "var(--accent-green)";
                     rto = "15 Minutes"; rpo = "5 Minutes";
-                    htmlReport = `<strong>Incident Scope:</strong> A major infrastructure cloud zone experiences a total dark outage.<br><br>
-                    <strong>Recovery Validation:</strong> SUCCESS. Because **Cross-Region Replication (CRR)** was active, your cloud nodes were automatically mirrored to a secondary geographic territory. DNS failed over instantly.`;
-                } else if (strictCompliance && !isCrr) {
-                    statusTitle = "🟡 INFRASTRUCTURE STALLED (Single Region Cloud)";
-                    h.style.color = "var(--accent-orange)";
-                    rto = "Unknown"; rpo = "Last Sync";
-                    htmlReport = `<strong>Incident Scope:</strong> Cloud provider core regional failure.<br><br>
-                    <strong>Recovery Validation:</strong> STALLED. Your cloud backup was safe, but because it was pinned to a single region without CRR, your operations are stuck offline until the provider resolves the regional outage.`;
+                    htmlReport = `<strong>Incident Scope:</strong> A structural failure crashes the power grid across the United Kingdom.<br><br>
+                    <strong>Recovery Validation:</strong> SUCCESS. Because **Cross-Region Replication (CRR)** was fully operational and backed by European targets, your application state failed over instantly to continental clusters. Traffic continued smoothly.`;
                 } else {
-                    statusTitle = "🔴 COMPONENT ORPHANED";
-                    h.style.color = "var(--accent-red)";
-                    htmlReport = `<strong>Incident Scope:</strong> Single point cloud reliance failure.<br><br>
-                    <strong>Recovery Validation:</strong> CRITICAL FAILURE. No survivable operational paths.`;
+                    statusTitle = "🔴 SERVICE STALLED (Single-Jurisdiction Network)";
+                    h.style.color = "var(--accent-orange)";
+                    htmlReport = `<strong>Incident Scope:</strong> Total UK regional blackout.<br><br>
+                    <strong>Recovery Validation:</strong> STALLED. Your data might be safe, but because you turned off Cross-Region Replication or lacked active continental nodes, you cannot point your traffic anywhere else. The company stays offline.`;
                 }
             }
 
@@ -659,7 +749,7 @@
 
         function closeDrillModal() {
             document.getElementById('drill-modal').style.display = 'none';
-            writeLog("System: Recovery window evaluated. Standing by for architecture design refinement...");
+            writeLog("System: Scenario complete. Resuming proactive sovereign network tracking monitoring...");
         }
     </script>
 </body>
