@@ -32,7 +32,7 @@
 
         .lab-wrapper {
             width: 100%;
-            max-width: 1300px;
+            max-width: 1400px;
             display: flex;
             flex-direction: column;
             gap: 20px;
@@ -60,14 +60,12 @@
             font-size: 0.95rem;
         }
 
-        /* The Grid layout containing the interactive systems */
         .workspace-grid {
             display: grid;
-            grid-template-columns: 320px 1fr 340px;
+            grid-template-columns: 340px 1fr 340px;
             gap: 20px;
         }
 
-        /* Column Typings */
         .panel {
             background-color: var(--panel-bg);
             border: 1px solid #1e293b;
@@ -89,7 +87,6 @@
             margin-bottom: 5px;
         }
 
-        /* Interactive Component 1: Data Engine Tokens */
         .data-token {
             background: linear-gradient(135deg, #0284c7, #0369a1);
             color: white;
@@ -102,7 +99,6 @@
             border: 1px solid #0c4a6e;
         }
 
-        /* Interactive Component 2 & 3: Strategy Options Controls */
         .setting-control {
             display: flex;
             flex-direction: column;
@@ -123,9 +119,9 @@
             padding: 8px;
             border-radius: 6px;
             outline: none;
+            box-sizing: border-box;
         }
 
-        /* Infrastructure Grid */
         .infra-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -152,7 +148,6 @@
             text-transform: uppercase;
         }
 
-        /* Interactive Component 4: Architecture Storage Nodes */
         .node {
             background-color: var(--node-bg);
             border: 1px solid #334155;
@@ -193,7 +188,6 @@
             font-weight: 600;
         }
 
-        /* Dynamic Copy Indicator Badge */
         .copy-tag {
             margin-top: 8px;
             background: #10b981;
@@ -204,7 +198,6 @@
             font-weight: bold;
         }
 
-        /* Live Compliance Real-time Scorecard Matrix */
         .scorecard-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -233,7 +226,6 @@
         .score-box.pass { border-color: var(--accent-green); }
         .score-box.pass .score-val { color: var(--accent-green); }
 
-        /* Logs Display terminal layout */
         .terminal-log {
             background-color: var(--bg-dark);
             border: 1px solid #1e293b;
@@ -241,12 +233,11 @@
             padding: 10px;
             font-family: monospace;
             font-size: 0.8rem;
-            height: 120px;
+            height: 150px;
             overflow-y: auto;
             color: #34d399;
         }
 
-        /* Execution button triggers */
         .action-btn {
             background-color: var(--accent-blue);
             color: var(--bg-dark);
@@ -263,7 +254,6 @@
 
         .action-btn:hover { opacity: 0.9; }
 
-        /* Modal Overlay Styles */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -278,7 +268,7 @@
             background-color: var(--panel-bg);
             border: 2px solid #334155;
             border-radius: 12px;
-            max-width: 600px;
+            max-width: 650px;
             width: 90%;
             padding: 30px;
             box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
@@ -312,42 +302,36 @@
 
     <div class="lab-wrapper">
         
-        <!-- Header Framework -->
         <header>
             <div class="header-info">
-                <h1>Data Protection & Architecture Simulator</h1>
+                <h1>Enterprise Data Protection Resiliency Lab</h1>
                 <p>Interactive 3-2-1 Compliance Sandbox & Disaster Drill Engine</p>
             </div>
             <div>
-                <span class="badge" style="background-color: #2e1065; color: #c084fc; padding: 6px 12px; font-size: 0.85rem;">Sandbox Version: 2026.1</span>
+                <span class="badge" style="background-color: #2e1065; color: #c084fc; padding: 6px 12px; font-size: 0.85rem;">Sandbox Version: 2026.2</span>
             </div>
         </header>
 
-        <!-- Main Dashboard Split Layout -->
         <div class="workspace-grid">
             
-            <!-- LEFT PANEL: Strategy Controls & Data Engine -->
             <div class="panel">
-                <div class="panel-title">1. Strategy & Payload</div>
+                <div class="panel-title">1. Policy Options & Controls</div>
                 
-                <!-- Interactive Comp 1: Drag Source Token -->
                 <div class="setting-control">
                     <label>Data Payload Module (Drag Source)</label>
-                    <div style="background: rgba(15,23,42,0.5); padding: 15px; border-radius: 8px; border: 1px dashed #334155; text-align: center;">
+                    <div style="background: rgba(15,23,42,0.5); padding: 12px; border-radius: 8px; border: 1px dashed #334155; text-align: center;">
                         <div class="data-token" draggable="true" id="source-payload">📦 Production_DB.sql</div>
                     </div>
                 </div>
 
-                <!-- Interactive Comp 2: Immutable Storage Toggle -->
                 <div class="setting-control">
                     <label for="setting-immutable">WORM Configuration (Immutable)</label>
                     <select id="setting-immutable">
-                        <option value="disabled">Disabled (Standard Writes)</option>
-                        <option value="enabled">Enabled (Object Lock / Compliance)</option>
+                        <option value="disabled">Disabled (Standard Modifiable Writes)</option>
+                        <option value="enabled">Enabled (Object Lock / Compliance Mode)</option>
                     </select>
                 </div>
 
-                <!-- Interactive Comp 3: Air-Gap Retention Slider -->
                 <div class="setting-control">
                     <label for="setting-retention">Air-Gap Rotation Frequency</label>
                     <input type="range" id="setting-retention" min="1" max="30" value="7">
@@ -357,73 +341,67 @@
                         <span>30 Days</span>
                     </div>
                 </div>
+
+                <div class="setting-control">
+                    <label for="setting-crr">Cross-Region Replication (CRR)</label>
+                    <select id="setting-crr">
+                        <option value="disabled">Disabled (Single Target Region)</option>
+                        <option value="enabled">Enabled (Multi-Region Geo-Redundancy)</option>
+                    </select>
+                </div>
+
+                <div class="setting-control">
+                    <label for="setting-mfa">MFA Delete Restriction</label>
+                    <select id="setting-mfa">
+                        <option value="disabled">Disabled (Root can delete via script)</option>
+                        <option value="enabled">Enabled (Requires Hardware Token)</option>
+                    </select>
+                </div>
             </div>
 
-            <!-- CENTER PANEL: Storage Target Infrastructure Architecture Topology -->
             <div class="panel" style="gap: 15px;">
                 <div class="panel-title">2. Storage Target Topology Infrastructure</div>
                 
                 <div class="infra-grid">
-                    <!-- On-Site Production Cluster -->
                     <div class="zone local-zone">
                         <div class="zone-header">HQ Primary Zone (On-Site)</div>
                         
-                        <!-- Interactive Comp 4a: Node 1 -->
                         <div class="node" data-id="n1" data-media="Disk" data-loc="local">
                             <div class="node-name">SAN Array Tier-0</div>
-                            <div class="node-meta">
-                                <span class="badge">Media: NVMe SSD</span>
-                            </div>
+                            <div class="node-meta"><span class="badge">Media: NVMe SSD</span></div>
                         </div>
 
-                        <!-- Interactive Comp 4b: Node 2 -->
                         <div class="node" data-id="n2" data-media="Disk" data-loc="local">
                             <div class="node-name">On-Premises NAS</div>
-                            <div class="node-meta">
-                                <span class="badge">Media: HDD RAID6</span>
-                            </div>
+                            <div class="node-meta"><span class="badge">Media: HDD RAID6</span></div>
                         </div>
 
-                        <!-- Interactive Comp 4c: Node 3 -->
                         <div class="node" data-id="n3" data-media="Tape" data-loc="local">
                             <div class="node-name">Local LTO Tape Library</div>
-                            <div class="node-meta">
-                                <span class="badge">Media: LTO-9 Magnetic</span>
-                            </div>
+                            <div class="node-meta"><span class="badge">Media: LTO-9 Magnetic</span></div>
                         </div>
                     </div>
 
-                    <!-- Off-Site Cloud Network Topology -->
                     <div class="zone remote-zone">
                         <div class="zone-header">Isolated Recovery Zone (Off-Site)</div>
                         
-                        <!-- Interactive Comp 4d: Node 4 -->
                         <div class="node" data-id="n4" data-media="Cloud" data-loc="remote">
                             <div class="node-name">Amazon S3 Standard</div>
-                            <div class="node-meta">
-                                <span class="badge">Media: Object Storage</span>
-                            </div>
+                            <div class="node-meta"><span class="badge">Media: Object Storage</span></div>
                         </div>
 
-                        <!-- Interactive Comp 4e: Node 5 -->
                         <div class="node" data-id="n5" data-media="Cloud" data-loc="remote">
                             <div class="node-name">AWS Backup S3 Vault</div>
-                            <div class="node-meta">
-                                <span class="badge">Media: Immutable Object</span>
-                            </div>
+                            <div class="node-meta"><span class="badge">Media: Immutable Object</span></div>
                         </div>
 
-                        <!-- Interactive Comp 4f: Node 6 -->
                         <div class="node" data-id="n6" data-media="Tape" data-loc="remote">
                             <div class="node-name">Deep Vaults (Offsite Tape)</div>
-                            <div class="node-meta">
-                                <span class="badge">Media: Air-Gapped Tape</span>
-                            </div>
+                            <div class="node-meta"><span class="badge">Media: Air-Gapped Tape</span></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Interactive Comp 5: Live Real-time Scorecard Matrix Grid -->
                 <div class="scorecard-grid">
                     <div class="score-box" id="card-copies">
                         <div style="font-size:0.75rem; color:var(--text-muted);">COPIES (Min 3)</div>
@@ -440,37 +418,31 @@
                 </div>
             </div>
 
-            <!-- RIGHT PANEL: Threat Matrix Vectors & Simulation Log Terminal -->
             <div class="panel">
                 <div class="panel-title">3. Threat Matrix Engine</div>
                 
-                <!-- Interactive Comp 6: Disaster Vector Target Selector Dropdown -->
                 <div class="setting-control">
                     <label for="setting-threat">Inject Disaster Attack Vector</label>
                     <select id="setting-threat">
                         <option value="ransomware">LockBit Ransomware (Lateral Propagation)</option>
                         <option value="flood">Catastrophic Datacenter Flash Flood</option>
                         <option value="insider">Malicious Insider (Credential Leak Event)</option>
-                    </select>
+                        <option value="regional">AWS Regional Outage (US-EAST-1 Failure)</option> </select>
                 </div>
 
-                <!-- Interactive Comp 7: Real-time System Simulation Console Logs -->
                 <div class="setting-control">
                     <label>System Live Execution Stream</label>
-                    <div class="terminal-log" id="log-stream">> Environment Initialized. Ready for topology deployment...</div>
+                    <div class="terminal-log" id="log-stream">> Infrastructure online. Mount payload to map topology...</div>
                 </div>
 
-                <!-- Interactive Comp 8: Execute Simulation Diagnostic Run Button Trigger -->
                 <button class="action-btn" id="btn-simulate">Fire Disaster Simulation Drill</button>
                 
-                <!-- Interactive Comp 9: Purge Strategy / Reset Topology States Button Trigger -->
                 <button class="action-btn" id="btn-reset" style="background-color:#334155; color:white;">Clear Infrastructure Grid</button>
             </div>
 
         </div>
     </div>
 
-    <!-- Interactive Comp 10: Full Post-Mortem Failure Analysis Modal Dialog Framework -->
     <div class="modal-overlay" id="drill-modal">
         <div class="modal-card">
             <div class="modal-header" id="m-header">Drill Execution Completed</div>
@@ -482,10 +454,8 @@
     </div>
 
     <script>
-        // Memory state matrix
         const infrastructureState = {};
 
-        // DOM nodes references
         const payloadToken = document.getElementById('source-payload');
         const storageNodes = document.querySelectorAll('.node');
         const retentionSlider = document.getElementById('setting-retention');
@@ -494,180 +464,14 @@
         const btnSimulate = document.getElementById('btn-simulate');
         const btnReset = document.getElementById('btn-reset');
         const optImmutable = document.getElementById('setting-immutable');
+        const optCrr = document.getElementById('setting-crr');
+        const optMfa = document.getElementById('setting-mfa');
         const optThreat = document.getElementById('setting-threat');
 
-        // Interactive Component 3 event handler loop
         retentionSlider.addEventListener('input', (e) => {
             retentionVal.innerText = `${e.target.value} Days rotation`;
-            writeLog(`System Update: Air-gap rotational threshold adjusted to ${e.target.value} calendar days.`);
+            writeLog(`System: Modified rotational gap window threshold to ${e.target.value} days.`);
         });
 
-        // Interactive Component 2 adjustment logging
-        optImmutable.addEventListener('change', (e) => {
-            writeLog(`Security Policy Update: Immutable policy configuration set to [${e.target.value.toUpperCase()}].`);
-        });
-
-        // Interactive Component 4: Drag and Drop Handlers
-        payloadToken.addEventListener('dragstart', (e) => {
-            e.dataTransfer.setData('text/plain', 'payload-stream');
-        });
-
-        storageNodes.forEach(node => {
-            node.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                if (!node.classList.contains('occupied')) {
-                    node.classList.add('drag-over');
-                }
-            });
-
-            node.addEventListener('dragleave', () => {
-                node.classList.remove('drag-over');
-            });
-
-            node.addEventListener('drop', (e) => {
-                e.preventDefault();
-                node.classList.remove('drag-over');
-                
-                const id = node.getAttribute('data-id');
-                if (!infrastructureState[id]) {
-                    infrastructureState[id] = {
-                        name: node.querySelector('.node-name').innerText,
-                        media: node.getAttribute('data-media'),
-                        loc: node.getAttribute('data-loc')
-                    };
-
-                    node.classList.add('occupied');
-                    
-                    const tag = document.createElement('div');
-                    tag.className = 'copy-tag';
-                    tag.innerText = 'Active Backup Copy';
-                    node.appendChild(tag);
-
-                    writeLog(`Data Routing Event: Deployed replicated instance to node [${infrastructureState[id].name}].`);
-                    evaluateMatrixMetrics();
-                }
-            });
-        });
-
-        // Interactive Component 5: Evaluate Strategy Matrix Metrics Engine
-        function evaluateMatrixMetrics() {
-            const keys = Object.keys(infrastructureState);
-            const totalCopies = keys.length;
-            
-            const mediaTypes = new Set();
-            let remoteCount = 0;
-
-            keys.forEach(k => {
-                mediaTypes.add(infrastructureState[k].media);
-                if (infrastructureState[k].loc === 'remote') remoteCount++;
-            });
-
-            // Reflect on UI state matrix displays
-            document.getElementById('val-copies').innerText = totalCopies;
-            document.getElementById('val-media').innerText = mediaTypes.size;
-            document.getElementById('val-offsite').innerText = remoteCount;
-
-            // Compute dynamic border passes configurations
-            toggleMetricBoxPass('card-copies', totalCopies >= 3);
-            toggleMetricBoxPass('card-media', mediaTypes.size >= 2);
-            toggleMetricBoxPass('card-offsite', remoteCount >= 1);
-
-            return { totalCopies, mediaCount: mediaTypes.size, remoteCount };
-        }
-
-        function toggleMetricBoxPass(elementId, isPassing) {
-            const el = document.getElementById(elementId);
-            if (isPassing) el.classList.add('pass');
-            else el.classList.remove('pass');
-        }
-
-        // Interactive Component 7: Terminal Stream Engine logger
-        function writeLog(message) {
-            const timestamp = new Date().toISOString().slice(11, 19);
-            logStream.innerHTML += `<br>[${timestamp}] ${message}`;
-            logStream.scrollTop = logStream.scrollHeight;
-        }
-
-        // Interactive Component 9: State Reset Functionality
-        btnReset.addEventListener('click', () => {
-            Object.keys(infrastructureState).forEach(k => delete infrastructureState[k]);
-            storageNodes.forEach(node => {
-                node.classList.remove('occupied');
-                const tag = node.querySelector('.copy-tag');
-                if (tag) tag.remove();
-            });
-            evaluateMatrixMetrics();
-            writeLog("System Alert: Node baseline configuration completely cleared.");
-        });
-
-        // Interactive Component 8 & 10: Dynamic Analysis Modal Execution Engines
-        btnSimulate.addEventListener('click', () => {
-            const metrics = evaluateMatrixMetrics();
-            const selectedThreat = optThreat.value;
-            const isWorm = optImmutable.value === 'enabled';
-            
-            writeLog(`CRITICAL: Commencing threat injection drill [${selectedThreat.toUpperCase()}] against target arrays...`);
-
-            const modal = document.getElementById('drill-modal');
-            const h = document.getElementById('m-header');
-            const b = document.getElementById('m-body');
-
-            // 3-2-1 Compliance calculations checks
-            const has3Copies = metrics.totalCopies >= 3;
-            const has2Media = metrics.mediaCount >= 2;
-            const has1Offsite = metrics.remoteCount >= 1;
-            const strictCompliance = has3Copies && has2Media && has1Offsite;
-
-            let statusTitle = "";
-            let htmlReport = "";
-
-            // Dynamic logic injection depending on threat vector matrices combinations
-            if (selectedThreat === 'flood') {
-                if (has1Offsite) {
-                    statusTitle = "🟢 STRATEGY RESILIENT (On-Site Damaged)";
-                    h.style.color = "var(--accent-green)";
-                    htmlReport = `<strong>Incident Scope:</strong> A structural failure water leak has flooded the main data center. All local systems (SAN, NAS, Local Tape) are short-circuited and lost.<br><br>
-                    <strong>Recovery Validation:</strong> SUCCESS. Because you adhered to the **1 Off-Site Rule**, your cloud and remote infrastructure blocks remained completely dry. Restoration operations successfully initialized from off-site replicas.`;
-                } else {
-                    statusTitle = "🔴 TOTAL DATA LOSS (No Off-site Isolation)";
-                    h.style.color = "var(--accent-red)";
-                    htmlReport = `<strong>Incident Scope:</strong> Main data center flooded. 100% of local infrastructure destroyed.<br><br>
-                    <strong>Recovery Validation:</strong> CRITICAL FAILURE. You kept all your data copies in the same geographic facility boundary. With no off-site presence, your data was lost completely.`;
-                }
-            } 
-            else if (selectedThreat === 'ransomware') {
-                if (strictCompliance && isWorm) {
-                    statusTitle = "🟢 STRATEGY RESILIENT (Ransomware Contained)";
-                    h.style.color = "var(--accent-green)";
-                    htmlReport = `<strong>Incident Scope:</strong> Ransomware payload compromised domain controller credentials and attempted to encrypt all reachable network mounts.<br><br>
-                    <strong>Recovery Validation:</strong> SUCCESS. Although the local network mounts were encrypted, your **Immutable (WORM)** configuration or **Air-Gapped Tape archives** blocked the malware from modifying historical snapshots. Systems safely rolled back to a trusted restoration point.`;
-                } else if (strictCompliance && !isWorm) {
-                    statusTitle = "🟡 PARTIAL COMPROMISE (No Immutability)";
-                    h.style.color = "var(--accent-orange)";
-                    htmlReport = `<strong>Incident Scope:</strong> Ransomware deployed. Because backups were accessible over standard live network access lines without WORM protection locks, the ransomware traveled along connected paths and encrypted both local NAS and remote cloud buckets.<br><br>
-                    <strong>Recovery Validation:</strong> PARTIAL FAILURE. Your architectural framework satisfied 3-2-1 parameters, but without **WORM/Immutable Object Locking**, the attacker was able to delete network-accessible backup copies. *(Tip: Enable WORM architecture or utilize disconnected Air-Gapped Tape targets to solve this)*.`;
-                } else {
-                    statusTitle = "🔴 BACKUP ENVIRONMENT ENCRYPTED";
-                    h.style.color = "var(--accent-red)";
-                    htmlReport = `<strong>Incident Scope:</strong> Ransomware sweep completely compromised storage nodes.<br><br>
-                    <strong>Recovery Validation:</strong> CRITICAL FAILURE. Lacking isolated offsite nodes or structural configuration varieties allowed the malware to propagate across adjacent assets concurrently, leaving no valid recovery points.`;
-                }
-            } 
-            else if (selectedThreat === 'insider') {
-                if (metrics.totalCopies >= 4 && isWorm) {
-                    statusTitle = "🟢 EXPLOIT DEFLECTED (Deep Defense)";
-                    h.style.color = "var(--accent-green)";
-                    htmlReport = `<strong>Incident Scope:</strong> A rogue engineer with elevated administrative clearances deliberately executed a massive wipe of active tracking indices.<br><br>
-                    <strong>Recovery Validation:</strong> SUCCESS. High redundancy distributions combined with **Object Lock architecture policies** prevented global deletion privileges from taking effect on deep protection buckets.`;
-                } else {
-                    statusTitle = "🔴 PRIVILEGED ADMINISTRATIVE COMPROMISE";
-                    h.style.color = "var(--accent-red)";
-                    htmlReport = `<strong>Incident Scope:</strong> Rogue internal actor systematically deleted all cloud object indexes and formatted accessible SAN volumes.<br><br>
-                    <strong>Recovery Validation:</strong> CRITICAL FAILURE. Standard credentials had the power to clear all locations. To block this threat vector, you need an isolated, immutable backup vault or a physically air-gapped tape backup system that software commands cannot clear.`;
-                }
-            }
-
-            h.innerText = statusTitle;
-            b.innerHTML = htmlReport;
-            modal.style.display = 'flex';
-        });
+        optImmutable.addEventListener('change', (e) => writeLog(`Policy: Immutable storage status set to [${e.target.value.toUpperCase()}].`));
+        optCrr.addEventListener('change', (e) => write
