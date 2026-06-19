@@ -60,6 +60,48 @@
             font-size: 0.95rem;
         }
 
+        /* Top Task Navigation Bar Dashboard */
+        .task-bar {
+            display: flex;
+            gap: 10px;
+            background-color: var(--panel-bg);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #1e293b;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .task-btn {
+            background-color: #1e293b;
+            color: var(--accent-blue);
+            border: 1px solid #334155;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+
+        .task-btn:hover {
+            background-color: #334155;
+            color: white;
+            border-color: var(--accent-blue);
+        }
+
+        .evidence-btn {
+            background-color: rgba(249, 115, 22, 0.1);
+            color: var(--accent-orange);
+            border: 1px solid rgba(249, 115, 22, 0.4);
+        }
+
+        .evidence-btn:hover {
+            background-color: var(--accent-orange);
+            color: var(--bg-dark);
+            border-color: var(--accent-orange);
+        }
+
         .workspace-grid {
             display: grid;
             grid-template-columns: 350px 1fr;
@@ -97,16 +139,6 @@
             font-size: 0.85rem;
             font-weight: 600;
             color: #cbd5e1;
-        }
-
-        select {
-            width: 100%;
-            background-color: var(--bg-dark);
-            border: 1px solid #334155;
-            color: white;
-            padding: 8px;
-            border-radius: 6px;
-            outline: none;
         }
 
         .timeline-container {
@@ -207,7 +239,7 @@
             display: none;
             position: fixed;
             top:0; left:0; width:100%; height:100%;
-            background: rgba(7, 10, 19, 0.9);
+            background: rgba(7, 10, 19, 0.85);
             z-index: 100;
             justify-content: center;
             align-items: center;
@@ -269,63 +301,67 @@
             </div>
         </header>
 
+        <div class="task-bar">
+            <span style="font-weight:bold; font-size:0.9rem; color:var(--text-muted); margin-right:10px;">📋 LAB TASKS:</span>
+            <button class="task-btn" onclick="activateTask(1)">Task 1: Differential Run</button>
+            <button class="task-btn" onclick="activateTask(2)">Task 2: Incremental Run</button>
+            <button class="task-btn evidence-btn" onclick="activateTask(3)">📸 Evidence Required</button>
+        </div>
+
         <div class="workspace-grid">
             
-            <!-- LEFT PANEL: Strategy Controls -->
             <div class="panel">
-                <div class="panel-title">1. Strategy Configuration</div>
+                <div class="panel-title">1. Strategy Information</div>
                 
                 <div class="setting-control">
-                    <label for="strategy-select">Active Backup Rotation Policy</label>
-                    <select id="strategy-select">
-                        <option value="diff">Strategy A: Sunday Full + Daily Differential</option>
-                        <option value="inc">Strategy B: Sunday Full + Daily Incremental</option>
-                    </select>
+                    <label id="active-strategy-label">Active Policy Layout: Differential</label>
+                    <div style="font-size:0.8rem; color:var(--text-muted); line-height:1.4;">
+                        Select a task from the top bar to swap between the Differential and Incremental backup rotation schedules.
+                    </div>
                 </div>
 
                 <div class="setting-control">
                     <label>Operational Execution Log</label>
-                    <div class="terminal-log" id="log-stream">> Storage controller ready. Choose policy context to display rotation map...</div>
+                    <div class="terminal-log" id="log-stream">> Storage controller ready. Staging boards initialized...</div>
                 </div>
 
                 <button class="action-btn" id="btn-verify">Initiate Restore Operations</button>
                 <button class="action-btn" id="btn-clear" style="background-color:#334155; color:white;">Clear Selection</button>
             </div>
 
-            <!-- RIGHT PANEL: Timeline Schedule Display -->
             <div class="panel">
                 <div class="panel-title">2. Scheduled Backup Chain Map</div>
                 
                 <div class="crash-banner">
-                    ⚠️ CRITICAL SYSTEM EVENT: Production Storage Array suffered a hardware head-crash on Friday at 14:00. Production state lost.
+                    ⚠️ CRITICAL SYSTEM EVENT: Production Storage Array suffered a hardware head-crash on Friday at 14:00. Production data lost.
                 </div>
 
                 <p style="margin:0; font-size:0.9rem; color:var(--text-muted);">
-                    <strong>Instructions:</strong> Click on the backup media nodes below to build your restoration sequence. You must select the exact chain required to bring the system back to its latest state before the Friday crash while avoiding redundant blocks.
+                    <strong>Instructions:</strong> Review the active backup schema below. Click on the media tape blocks to select exactly which recovery points to send into the restoration engine.
                 </p>
 
                 <div class="timeline-container">
                     <div class="week-track" id="timeline-grid">
-                        <!-- Dynamic Day Nodes injected here via JS -->
-                    </div>
+                        </div>
                 </div>
             </div>
 
         </div>
     </div>
 
-    <!-- Results Modal Display Container -->
     <div class="modal-overlay" id="result-modal">
         <div class="modal-card">
             <div class="modal-header" id="m-header">Restoration Sequence Audit</div>
             <div class="modal-body" id="m-body">Processing storage sequence data indexes...</div>
             <div style="text-align: right;">
-                <button class="modal-close" onclick="closeModal()">Modify Sequence Matrix</button>
+                <button class="modal-close" id="btn-modal-close" onclick="closeModal()">Acknowledge & Continue</button>
             </div>
         </div>
     </div>
 
     <script>
+        let currentStrategy = "diff"; // Tracks active configuration profile context
+
         const backupDataMatrix = {
             diff: [
                 { id: "sun", day: "Sunday", type: "Full", size: "500 GB", changes: "Base baseline dataset snapshot" },
@@ -345,17 +381,70 @@
             ]
         };
 
+        const taskBriefings = {
+            1: {
+                title: "Task 1 Instructions: Differential Restore Strategy",
+                body: `<strong>Objective:</strong> Rebuild the filesystem using a Sunday Full + Daily Differential rotation model.<br><br>
+                       <strong>Your Mission:</strong><br>
+                       1. Deduce the absolute minimum number of media volumes required to recover data cleanly up to Friday morning.<br>
+                       2. Avoid processing redundant mid-week blocks to maximize your restoration speed metrics.<br>
+                       3. Select the correct tapes on the grid and click <strong>Initiate Restore Operations</strong>.`
+            },
+            2: {
+                title: "Task 2: Incremental Restore Strategy",
+                body: `<strong>Objective:</strong> Reconstruct your environment along a daily, fragmented Incremental chain framework.<br><br>
+                       <strong>Your Mission:</strong><br>
+                       1. Identify how the recovery engine handles delta sets that only track changes back to the immediate preceding day.<br>
+                       2. Mount the precise sequential combination of tapes needed to re-stitch the data without leaving chronological logical holes.<br>
+                       3. Select the correct tapes on the grid and click <strong>Initiate Restore Operations</strong>.`
+            },
+            3: {
+                title: "📸 LAB SIGN-OFF: Evidence Requirements",
+                body: `<strong>Submission Deliverables:</strong><br>
+                       Apprentices must capture visual verification files of successful, optimal recoveries for both data architectures to satisfy evaluation criteria.<br><br>
+                       <strong>Instructions:</strong><br>
+                       Unlock the green success screens for both <strong>Task 1 (Differential optimal pass)</strong> and <strong>Task 2 (Incremental pass)</strong>. Take a clear snippet showing:<br>
+                       • The configured schedule grid layout and your chosen tape selections.<br>
+                       • The green <strong>'Strategy Verification Passed'</strong> notification window.<br><br>
+                       Save your images and upload them to your coordinator for performance validation.`
+            }
+        };
+
         let selectedNodes = new Set();
-        const strategySelect = document.getElementById('strategy-select');
         const timelineGrid = document.getElementById('timeline-grid');
         const logStream = document.getElementById('log-stream');
         const btnVerify = document.getElementById('btn-verify');
         const btnClear = document.getElementById('btn-clear');
+        const strategyLabel = document.getElementById('active-strategy-label');
+        
+        const modal = document.getElementById('result-modal');
+        const modalHeader = document.getElementById('m-header');
+        const modalBody = document.getElementById('m-body');
+        const modalCloseBtn = document.getElementById('btn-modal-close');
+
+        function activateTask(taskId) {
+            modalHeader.innerText = taskBriefings[taskId].title;
+            modalHeader.style.color = (taskId === 3) ? "var(--accent-orange)" : "var(--accent-blue)";
+            modalBody.innerHTML = taskBriefings[taskId].body;
+            modalCloseBtn.innerText = "Close Instructions & Start Task";
+            modal.style.display = 'flex';
+
+            if (taskId === 1) {
+                currentStrategy = "diff";
+                strategyLabel.innerText = "Active Policy Layout: Differential";
+                writeLog("Context Shift: Initialized layout profile for Task 1 (Differential Architecture).");
+                renderTimeline();
+            } else if (taskId === 2) {
+                currentStrategy = "inc";
+                strategyLabel.innerText = "Active Policy Layout: Incremental";
+                writeLog("Context Shift: Initialized layout profile for Task 2 (Incremental Architecture).");
+                renderTimeline();
+            }
+        }
 
         function renderTimeline() {
             timelineGrid.innerHTML = '';
             selectedNodes.clear();
-            const currentStrategy = strategySelect.value;
             const dataset = backupDataMatrix[currentStrategy];
 
             dataset.forEach(item => {
@@ -381,11 +470,11 @@
                     if (node.classList.contains('selected')) {
                         node.classList.remove('selected');
                         selectedNodes.delete(item.id);
-                        writeLog(`Tape removed: De-selected ${item.day} archive recovery point.`);
+                        writeLog(`Tape unmounted: Removed ${item.day} volume point from recovery queue.`);
                     } else {
                         node.classList.add('selected');
                         selectedNodes.add(item.id);
-                        writeLog(`Tape mounted: Staging ${item.day} [${item.type}] volume into recovery stream.`);
+                        writeLog(`Tape mounted: Loaded ${item.day} volume archive into execution buffer.`);
                     }
                 });
 
@@ -399,22 +488,15 @@
             logStream.scrollTop = logStream.scrollHeight;
         }
 
-        strategySelect.addEventListener('change', () => {
-            renderTimeline();
-            writeLog(`Rotation Shift: Switched context grid to display execution map for [${strategySelect.options[strategySelect.selectedIndex].text}].`);
-        });
-
         btnClear.addEventListener('click', () => {
             document.querySelectorAll('.day-node').forEach(n => n.classList.remove('selected'));
             selectedNodes.clear();
-            writeLog("Clear Complete: Active recovery media set reset to zero baseline.");
+            writeLog("Clear Signal: Reset active tape allocation registers back to baseline.");
         });
 
         btnVerify.addEventListener('click', () => {
-            const currentStrategy = strategySelect.value;
-            const modal = document.getElementById('result-modal');
-            const header = document.getElementById('m-header');
-            const body = document.getElementById('m-body');
+            modalHeader.style.color = "var(--accent-red)";
+            modalCloseBtn.innerText = "Modify Sequence Parameters";
 
             let isSuccess = false;
             let feedback = "";
@@ -426,20 +508,20 @@
 
                 if (hasSun && hasFri && totalSelected === 2) {
                     isSuccess = true;
-                    feedback = `<strong>RESTORE SUCCESS! (Optimal Chain Verified)</strong><br><br>
-                    Your sequence is correct. Because a **Differential Backup** captures <em>all data changes since the last Full baseline</em>, you only need to mount the Sunday Full tape and the latest Friday Differential tape.<br><br>
-                    • <strong>Total Media Volumes Processed:</strong> 2 Tapes mounted.<br>
-                    • <strong>Restore Overhead:</strong> Low network load. You successfully skipped Monday through Thursday, avoiding redundant restructures.`;
+                    feedback = `<strong>RESTORE SUCCESS! (Optimal Configuration Verified)</strong><br><br>
+                    Your sequence is flawless. Because a <strong>Differential Backup</strong> aggregates <em>every data modification tracked since the last Full baseline event</em>, you only need to process the Sunday baseline tape and the latest cumulative Friday tape volume.<br><br>
+                    • <strong>Volumes Processed:</strong> 2 Tapes total.<br>
+                    • <strong>RTO Time Metrics:</strong> Excellent. Monday through Thursday data blocks were skipped completely, protecting processing paths from duplication vulnerabilities.`;
                 } else if (hasSun && hasFri && totalSelected > 2) {
-                    feedback = `<strong>RESTORE COMPLETED (But Sub-Optimal Configuration)</strong><br><br>
-                    The data was recovered, but your architecture failed efficiency checks. You included mid-week differential tapes (Monday-Thursday).<br><br>
-                    ⚠️ <strong>Redundancy Alert:</strong> Since Wednesday's differential already contains all modifications from Monday and Tuesday, processing mid-week tapes wastes time and replicates blocks. You only need the **Full baseline + the latest cumulative volume**.`;
+                    feedback = `<strong>RESTORE COMPLETED (Sub-Optimal Configuration Processed)</strong><br><br>
+                    Data center operations are online, but your recovery strategy had high time overhead. You included mid-week differential tapes (Monday-Thursday).<br><br>
+                    ⚠️ <strong>Redundancy Alert:</strong> Since Friday's differential record already completely encompasses previous day changes, replaying mid-week tapes wastes processing time. You only need the **Full baseline + the latest cumulative volume**.`;
                 } else if (hasSun && !hasFri) {
-                    feedback = `<strong>RESTORE CRASHED: INCOMPLETE DATASET</strong><br><br>
-                    ❌ Recovery Failed. You mounted the Sunday Full baseline database, but you left out the latest Friday differential tape volume. Your data state is stuck 5 days out of date, resulting in severe transactional business losses.`;
+                    feedback = `<strong>RESTORE CRASHED: INCOMPLETE DATASET PROFILE</strong><br><br>
+                    ❌ Critical Operational Failure. You mounted the Sunday baseline, but left out the final Friday tape containing the recent week's data updates. Your server data configurations are stuck 5 days out of date, resulting in structural transaction data loss.`;
                 } else {
-                    feedback = `<strong>RESTORE CRASHED: BROKEN BASELINE</strong><br><br>
-                    ❌ Critical Execution Error. You cannot process differential modification tapes without mounting the original **Sunday Full Backup** snapshot first. The storage recovery engine has nothing to anchor the delta points to.`;
+                    feedback = `<strong>RESTORE CRASHED: BROKEN BASELINE ANCHOR</strong><br><br>
+                    ❌ Logic Sequence Halt. Differential log profiles cannot calculate file sectors without mounting the original **Sunday Full Backup** tape array first. The system has no baseline to anchor changes to.`;
                 }
             } else if (currentStrategy === 'inc') {
                 const hasAll = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri'].every(id => selectedNodes.has(id));
@@ -448,29 +530,29 @@
                 if (hasAll && totalSelected === 6) {
                     isSuccess = true;
                     feedback = `<strong>RESTORE SUCCESS! (Full Sequential Chain Restored)</strong><br><br>
-                    Your sequence is correct. Because an **Incremental Backup** captures <em>only the block updates made since the immediate previous backup</em>, you must re-play every single interval in the exact order they occurred.<br><br>
-                    • <strong>Total Media Volumes Processed:</strong> 6 Tapes required.<br>
-                    • <strong>System Cost Note:</strong> Incremental strategy keeps the daily backup times incredibly fast and small, but requires more storage management overhead during a disaster recovery lifecycle. If any mid-week tape is lost, the chain is broken!`;
+                    Your sequence is correct. Because an <strong>Incremental Backup</strong> records <em>only delta block adjustments generated since the immediate prior backup session</em>, you must play back every day's tape volume in exact chronological order.<br><br>
+                    • <strong>Volumes Processed:</strong> 6 Tapes required.<br>
+                    • <strong>Risk Parameter:</strong> Incremental rotations keep daily backup times incredibly fast and lightweight, but increase disaster recovery risk. If even a single daily tape is damaged or lost, the rest of the log linkage chain shatters!`;
                 } else if (selectedNodes.has('sun') && selectedNodes.has('fri') && totalSelected === 2) {
-                    feedback = `<strong>RESTORE CRASHED: CORRUPT DELTA STRUCTURE</strong><br><br>
-                    ❌ Critical Logic Gap. You selected Sunday and Friday only. Because this rotation relies on **Incremental logs**, Friday's backup only contains changes made between Thursday morning and Friday morning. You are missing all data additions from Monday, Tuesday, Wednesday, and Thursday.`;
+                    feedback = `<strong>RESTORE CRASHED: BROKEN LOG REPLAY CONTINUITY</strong><br><br>
+                    ❌ Critical Logic Gap. You only mounted Sunday and Friday within an Incremental layout. Friday's tape only holds adjustments made between Thursday and Friday morning. You are missing all data additions from Monday, Tuesday, Wednesday, and Thursday.`;
                 } else if (selectedNodes.has('sun') && totalSelected < 6) {
-                    feedback = `<strong>RESTORE CRASHED: BROKEN LOG CHAIN</strong><br><br>
-                    ❌ Data Loss Event. You missed steps in the sequential execution pipeline. An incremental structure acts like links in a chain—if you miss even one single day (e.g., leaving out Tuesday), the recovery engine cannot calculate data locations for the following days.`;
+                    feedback = `<strong>RESTORE CRASHED: FRACTURED LOG CHAIN LINK</strong><br><br>
+                    ❌ Recovery Failed. Missing links discovered inside your restoration profile. An incremental sequence acts like links in a chain. If you fail to process even one day's tape (e.g., omitting Tuesday), the system cannot trace file positions for the remaining days.`;
                 } else {
-                    feedback = `<strong>RESTORE CRASHED: BROKEN BASELINE</strong><br><br>
-                    ❌ Logic Execution Error. Every backup type strategy requires the **Initial Full Backup Baseline** to anchor the filesystem before applying delta tracks.`;
+                    feedback = `<strong>RESTORE CRASHED: BROKEN BASELINE ANCHOR</strong><br><br>
+                    ❌ Logic Sequence Halt. Initial structural baselines require an active **Sunday Full Backup** tape selection array to anchor tracking records.`;
                 }
             }
 
             header.innerText = isSuccess ? "🟢 Strategy Verification Passed" : "🔴 Restoration Chain Failed Audit";
-            header.style.color = isSuccess ? "var(--accent-green)" : "var(--accent-red)";
+            if (isSuccess) header.style.color = "var(--accent-green)";
             body.innerHTML = feedback;
             modal.style.display = 'flex';
         });
 
         function closeModal() {
-            document.getElementById('result-modal').style.display = 'none';
+            modal.style.display = 'none';
         }
 
         window.onload = renderTimeline;
