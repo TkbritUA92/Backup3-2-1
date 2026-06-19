@@ -1,1 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sovereign Multi-Region Data Protection Lab</title>
+    <style>
+        :root {
+            --bg-dark: #0b0f19;
+            --panel-bg: #131c2e;
+            --node-bg: #1e293b;
+            --accent-blue: #0ea5e9;
+            --accent-purple: #a855f7;
+            --accent-green: #22c55e;
+            --accent-orange: #f97316;
+            --accent-red: #ef4444;
+            --text-light: #f8fafc;
+            --text-muted: #64748b;
+        }
 
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .lab-wrapper {
+            width: 100%;
+            max-width: 1450px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        header {
+            background-color: var(--panel-bg);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #1e293b;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-info h1 {
+            margin: 0 0 8px 0;
+            font-size: 1.8rem;
+            color: var(--accent-blue);
+        }
+
+        .header-info p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .task-bar {
+            display: flex;
+            gap: 10px;
+            background-color: var(--panel-bg);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #1e293b;
+            align-items: center;
+        }
+
+        .task-btn {
+            background-color: #1e293b;
+            color: var(--accent-blue);
+            border: 1px solid #334155;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+
+        .task-btn:hover {
+            background-color: #334155;
+            color: white;
+            border-color: var(--accent-blue);
+        }
+
+        .workspace-grid {
+            display: grid;
+            grid-template-columns: 380px 1fr 350px;
+            gap: 20px;
+        }
+
+        .panel {
+            background-color: var(--panel-bg);
+            border: 1px solid #1e293b;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .panel-title {
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            border-bottom: 2px solid #1e293b;
+            padding-bottom: 8px;
+            margin-bottom: 5px;
+        }
+
+        .data-token {
+            background: linear-gradient(135deg, #0284c7, #0369a1);
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: grab;
+            font-weight: 600;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            border: 1px solid #0c4a6e;
+        }
+
+        .setting-control {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            background: rgba(15, 23, 42, 0.3);
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #1e293b;
+        }
+
+        .setting-control label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+
+        .control-purpose {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            line-height: 1.3;
+            margin-bottom: 4px;
+        }
+
+        .hint-text {
+            font-size: 0.75rem;
+            color: var(--accent-orange);
+            background: rgba(249, 115, 22, 0.05);
+            border-left: 2px solid var(--accent-orange);
+            padding: 4px 8px;
+            margin-top: 4px;
+            border-radius: 0 4px 4px 0;
+        }
+
+        select, input[type="range"] {
+            width: 100%;
+            background-color: var(--bg-dark);
+            border: 1px solid #334155;
+            color: white;
+            padding: 8px;
+            border-radius: 6px;
+            outline: none;
+            box-sizing: border-box;
+            font-size: 0.85rem;
+        }
+
+        .infra-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .zone {
+            background-color: rgba(15, 23, 42, 0.4);
+            border: 2px dashed #334155;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .zone.local-zone { border-color: var(--accent-blue); }
+        .zone.remote-zone { border-color: var(--accent-purple); }
+
+        .zone-header {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #94a3b8;
+            text-transform: uppercase;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .region-badge {
+            font-size: 0.7rem;
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        .node {
+            background-color: var(--node-bg);
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 12px;
+            position: relative;
+            cursor: move;
+        }
+
+        .node.drag-over {
+            border-color: var(--accent-blue);
+            background-color: #1e3a8a;
+        }
+
+        .node.occupied {
+            border-color: var(--accent-green);
+            background-color: #064e3b;
+        }
+
+        .node-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+        }
+
+        .node-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: flex;
+            gap: 8px;
+        }
+
+        .badge {
+            background-color: #334155;
+            color: #e2e8f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .copy-tag {
+            margin-top: 8px;
+            background: #10b981;
+            font-size: 0.75rem;
+            padding: 4px;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .scorecard-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            background: rgba(15, 23, 42, 0.6);
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #1e293b;
+        }
+
+        .score-box {
+            text-align: center;
+            padding: 8px;
+            background: var(--bg-dark);
+            border-radius: 6px;
+            border: 1px solid #334155;
+        }
+
+        .score-val {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--accent-blue);
+            margin-top: 4px;
+        }
+
+        .score-box.pass { border-color: var(--accent-green); }
+        .score-box.pass .score-val { color: var(--accent-green); }
+
+        .terminal-log {
+            background-color: var(--bg-dark);
+            border: 1px solid #1e293b;
+            border-radius: 6px;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            height: 180px;
+            overflow-y: auto;
+            color: #34d399;
+        }
+
+        .action-btn {
+            background-color: var(--accent-blue);
+            color: var(--bg-dark);
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+        }
+
+        .action-btn:hover { opacity: 0.9; }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top:0; left:0; width:100%; height:100%;
+            background: rgba(7, 10, 19, 0.9);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-card {
+            background-color: var(--panel-bg);
+            border: 2px solid #334155;
+            border-radius: 12px;
+            max-width: 650px;
+            width: 90%;
+            padding: 30px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+        }
+
+        .modal-header {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .modal-body {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #cbd5e1;
+            margin-bottom: 20px;
+        }
+
+        .modal-close {
+            background-color: var(--accent-blue);
+            color: var(--bg-dark);
+            border: none; padding: 10px 20px;
+            border-radius: 6px; font-weight: bold; cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="lab-wrapper">
+        
+        <header>
+            <div class="header-info">
+                <h1>Sovereign Multi-Region Data Protection Lab</h1>
+                <p>UK & EU Compliance Architecture Validation Sandbox</p>
+            </div>
+            <div>
+                <span class="badge" style="background-color: #2e1065; color: #c084fc; padding: 6px 12px; font-size: 0.85rem;">Sovereign Version: 2026.4</span>
+            </div>
+        </header>
+
+        <div class="task-bar">
+            <span style="font-weight:bold; font-size:0.9rem; color:var(--text-muted); margin-right:10px;">📋 APPRENTICE OBJECTIVES:</span>
+            <button class="task-btn" onclick="showTaskGuide(1)">Task 1: Geo-Topology</button>
+            <button class="task-btn" onclick="showTaskGuide(2)">Task 2: Vulnerability Analysis</button>
+            <button class="task-btn" onclick="showTaskGuide(3)">Task 3: Lab Hardening & Submission</button>
+        </div>
+
+        <div class="workspace-grid">
+            
+            <div class="panel">
+                <div class="panel-title">1. Sovereign Policy Configuration</div>
+                
+                <div class="setting-control">
+                    <label>Data Payload Module</label>
+                    <div class="control-purpose">The primary raw corporate assets block needing geo-protection.</div>
+                    <div style="background: rgba(15, 23, 42, 0.5); padding: 10px; border-radius: 6px; border: 1px dashed #334155; text-align: center;">
+                        <div class="data-token" draggable="true" id="source-payload">📦 Core_Sovereign_Data.db</div>
+                    </div>
+                </div>
+
+                <div class="setting-control">
+                    <label for="setting-immutable">WORM Configuration (Immutability)</label>
+                    <div class="control-purpose"><strong>What it's for:</strong> Ransomware defense. Forces storage layers into a "Write Once, Read Many" state.</div>
+                    <select id="setting-immutable">
+                        <option value="disabled">Disabled (Standard writes can be edited/encrypted)</option>
+                        <option value="enabled">Enabled (Lock blocks against modification/deletion)</option>
+                    </select>
+                    <div class="hint-text">Mechanics: Prevents malicious software encryption commands.</div>
+                </div>
+
+                <div class="setting-control">
+                    <label for="setting-retention">Air-Gap Rotation Frequency</label>
+                    <div class="control-purpose"><strong>What it's for:</strong> Recovery Point targets. Controls how often physical offline systems are updated.</div>
+                    <input type="range" id="setting-retention" min="1" max="30" value="7">
+                    <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-muted); margin-top:2px;">
+                        <span>1 Day</span>
+                        <span id="retention-val" style="color:var(--accent-blue)">7 Days rotation</span>
+                        <span>30 Days</span>
+                    </div>
+                </div>
+
+                <div class="setting-control">
+                    <label for="setting-crr">Cross-Region Replication (UK ⇄ EU)</label>
+                    <div class="control-purpose"><strong>What it's for:</strong> High availability failover. Automatically pipes live updates between data centers.</div>
+                    <select id="setting-crr">
+                        <option value="disabled">Disabled (Keep backups confined to their home grid)</option>
+                        <option value="enabled">Enabled (Actively mirror datasets across regional borders)</option>
+                    </select>
+                    <div class="hint-text">Dependency: Requires active target nodes inside both grids.</div>
+                </div>
+
+                <div class="setting-control">
+                    <label for="setting-mfa">MFA Delete Restriction</label>
+                    <div class="control-purpose"><strong>What it's for:</strong> Credential protection. Demands a secondary physical hardware code before deletions occur.</div>
+                    <select id="setting-mfa">
+                        <option value="disabled">Disabled (Root credentials can clear history using simple API scripts)</option>
+                        <option value="enabled">Enabled (Blocks all programmatic deletions without physical key entry)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="panel" style="gap: 15px;">
+                <div class="panel-title">2. Geo-Distributed Storage Targets</div>
+                
+                <p style="margin:0; font-size:0.8rem; color:var(--text-muted); line-height:1.4;">
+                    <strong>Instructions:</strong> Drag the blue 📦 payload token directly onto the storage boxes below. Balance your infrastructure across regions to handle local emergencies.
+                </p>
+
+                <div class="infra-grid">
+                    <div class="zone local-zone" id="zone-uk">
+                        <div class="zone-header">
+                            <span>UK Jurisdiction</span>
+                            <span class="region-badge" style="background:#0284c7; color:white;">UK-WEST-1</span>
+                        </div>
+                        
+                        <div class="node" data-id="n1" data-media="Disk" data-reg="uk">
+                            <div class="node-name">London Edge SAN</div>
+                            <div class="node-meta"><span class="badge">Media: NVMe Arrays</span></div>
+                        </div>
+
+                        <div class="node" data-id="n2" data-media="Disk" data-reg="uk">
+                            <div class="node-name">Manchester NAS Mirror</div>
+                            <div class="node-meta"><span class="badge">Media: HDD Array</span></div>
+                        </div>
+
+                        <div class="node" data-id="n3" data-media="Tape" data-reg="uk">
+                            <div class="node-name">UK Automated Tape Vault</div>
+                            <div class="node-meta"><span class="badge">Media: LTO-9 Magnetic</span></div>
+                        </div>
+                    </div>
+
+                    <div class="zone remote-zone" id="zone-eu">
+                        <div class="zone-header">
+                            <span>EU Jurisdiction</span>
+                            <span class="region-badge" style="background:#7c3aed; color:white;">EU-CENTRAL-1</span>
+                        </div>
+                        
+                        <div class="node" data-id="n4" data-media="Cloud" data-reg="eu">
+                            <div class="node-name">Frankfurt S3 Endpoint</div>
+                            <div class="node-meta"><span class="badge">Media: Cloud Object</span></div>
+                        </div>
+
+                        <div class="node" data-id="n5" data-media="Cloud" data-reg="eu">
+                            <div class="node-name">Paris Backup Vault</div>
+                            <div class="node-meta"><span class="badge">Media: Hardened Cloud</span></div>
+                        </div>
+
+                        <div class="node" data-id="n6" data-media="Tape" data-reg="eu">
+                            <div class="node-name">Offsite Tape (Rotterdam)</div>
+                            <div class="node-meta"><span class="badge">Media: Shipped Archive</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="scorecard-grid">
+                    <div class="score-box" id="card-copies">
+                        <div style="font-size:0.75rem; color:var(--text-muted);">COPIES (Min 3)</div>
+                        <div class="score-val" id="val-copies">0</div>
+                    </div>
+                    <div class="score-box" id="card-media">
+                        <div style="font-size:0.75rem; color:var(--text-muted);">MEDIA TYPES (Min 2)</div>
+                        <div class="score-val" id="val-media">0</div>
+                    </div>
+                    <div class="score-box" id="card-sovereign">
+                        <div style="font-size:0.75rem; color:var(--text-muted);">GEO-DIVERSITY</div>
+                        <div class="score-val" id="val-sovereign">0/2 Reg</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-title">3. Threat Matrix Injector</div>
+                
+                <div class="setting-control">
+                    <label for="setting-threat">Select Attack Vector to Test</label>
+                    <select id="setting-threat">
+                        <option value="ransomware">LockBit Ransomware (Lateral Propagation)</option>
+                        <option value="flood">Catastrophic London Data Center Flood</option>
+                        <option value="insider">Malicious Insider (Global Account Wipe)</option>
+                        <option value="regional">Grid Failure (UK Power Outage Blackout)</option>
+                    </select>
+                </div>
+
+                <div class="setting-control">
+                    <label>System Live Execution Stream</label>
+                    <div class="terminal-log" id="log-stream">> Sovereign landscape online. Adjust options or map nodes to begin tracking...</div>
+                </div>
+
+                <button class="action-btn" id="btn-simulate">Fire Disaster Simulation Drill</button>
+                <button class="action-btn" id="btn-reset" style="background-color:#334155; color:white;">Clear Infrastructure Grid</button>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="drill-modal">
+        <div class="modal-card">
+            <div class="modal-header" id="m-header">Drill Execution Completed</div>
+            <div class="modal-body" id="m-body">Simulation results loading...</div>
+            <div style="text-align: right;">
+                <button class="modal-close" id="btn-modal-close" onclick="closeDrillModal()">Acknowledge & Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const infrastructureState = {};
+
+        const payloadToken = document.getElementById('source-payload');
+        const storageNodes = document.querySelectorAll('.node');
+        const retentionSlider = document.getElementById('setting-retention');
+        const retentionVal = document.getElementById('retention-val');
+        const logStream = document.getElementById('log-stream');
+        const btnSimulate = document.getElementById('btn-simulate');
+        const btnReset = document.getElementById('btn-reset');
+        const optImmutable = document.getElementById('setting-immutable');
+        const optCrr = document.getElementById('setting-crr');
+        const optMfa = document.getElementById('setting-mfa');
+        const optThreat = document.getElementById('setting-threat');
+        const modalCloseBtn = document.getElementById('btn-modal-close');
+
+        const taskInstructions = {
+            1: {
+                title: "Task 1: Establish Geo-Distributed Topology Baseline",
+                body: `<strong>Objective:</strong> Provision the primary database to conform to the 3-2-1 standard while honoring international sovereign borders.<br><br>
+                       <strong>Instructions:</strong><br>
+                       1. Drag the 📦 data token onto at least 3 storage boxes.<br>
+                       2. Ensure your architecture includes at least two different media types (Disk, Cloud, or Tape).<br>
+                       3. Distribute the assets across *both* columns (UK and EU grids) until the lower 'GEO-DIVERSITY' metric turns <strong>Green (PASS)</strong>.<br><br>
+                       <em>Dependency Check:</em> Try toggling Cross-Region Replication to 'Enabled' before placing any nodes in the EU grid. Observe the terminal output log.`
+            },
+            2: {
+                title: "Task 2: Vulnerability Analysis & Exploit Verification",
+                body: `<strong>Objective:</strong> Prove how baseline compliance structures collapse without advanced logical policy controls.<br><br>
+                       <strong>Instructions:</strong><br>
+                       1. Deploy your data across 3 infrastructure nodes inside the <strong>UK Jurisdiction only</strong>.<br>
+                       2. Keep all safety options (WORM, CRR, MFA Delete) set to <strong>Disabled</strong>.<br>
+                       3. In Section 3, select the <strong>Catastrophic London Data Center Flood</strong> vector and click 'Fire Disaster Simulation Drill'.<br>
+                       4. Review the failure results card and notice how a localized physical incident completely breaks a localized topology.`
+            },
+            3: {
+                title: "Task 3: Security Hardening & Lab Submission",
+                body: `<strong>Objective:</strong> Deflect all advanced attack arrays, minimize recovery downtime (RTO), and submit evidence.<br><br>
+                       <strong>Instructions:</strong><br>
+                       1. Distribute your storage arrays across both regions. Turn on <strong>WORM, CRR, and MFA Delete</strong> rules.<br>
+                       2. Fire the simulation drills for all scenarios (Ransomware, Insider Threat, Regional Power Outage) until you achieve a <strong>Green (STRATEGY RESILIENT)</strong> pass status.<br><br>
+                       <strong>📸 EVIDENCE SUBMISSION INSTRUCTIONS:</strong><br>
+                       Once you achieve a successful green pass state, hold <strong>Windows Key + Shift + S</strong> (or <strong>Cmd + Shift + 4</strong> on Mac) to take a screenshot of your screen showing:<br>
+                       • The green scorecard compliance metrics tracker blocks.<br>
+                       • The calculated <strong>Achieved RTO & RPO</strong> values inside the completion box.<br><br>
+                       Save this snapshot file as <em>'Sovereign_Lab_Pass_[YourName].png'</em> and send it to your instructor for audit evaluation.`
+            }
+        };
+
+        function showTaskGuide(taskId) {
+            const modal = document.getElementById('drill-modal');
+            const h = document.getElementById('m-header');
+            const b = document.getElementById('m-body');
+
+            h.innerText = taskInstructions[taskId].title;
+            h.style.color = "var(--accent-blue)";
+            b.innerHTML = taskInstructions[taskId].body;
+            
+            modalCloseBtn.onclick = closeDrillModal;
+            modalCloseBtn.innerText = "Close Guide & Resume Lab";
+            modal.style.display = 'flex';
+        }
+
+        retentionSlider.addEventListener('input', (e) => {
+            retentionVal.innerText = `${e.target.value} Days rotation`;
+            writeLog(`System: Rotational gap window shifted to ${e.target.value} days.`);
+        });
+
+        optImmutable.addEventListener('change', (e) => writeLog(`Policy: Sovereign immutability token set to [${e.target.value.toUpperCase()}].`));
+        
+        optCrr.addEventListener('change', (e) => {
+            if (e.target.value === 'enabled') {
+                const hasUk = Object.values(infrastructureState).some(n => n.reg === 'uk');
+                const hasEu = Object.values(infrastructureState).some(n => n.reg === 'eu');
+                
+                if (!hasUk || !hasEu) {
+                    writeLog(`❌ Inter-Region Block: Cross-Region Replication requires active target endpoints in both UK and EU jurisdictions concurrently.`);
+                    e.target.value = 'disabled';
+                    return;
+                }
+            }
+            writeLog(`Policy: Inter-Region Cross-Replication toggled to [${e.target.value.toUpperCase()}].`);
+        });
+
+        optMfa.addEventListener('change', (e) => writeLog(`Policy: MFA operational rule updated to [${e.target.value.toUpperCase()}].`));
+
+        payloadToken.addEventListener('dragstart', (e) => e.dataTransfer.setData('text/plain', 'payload'));
+
+        storageNodes.forEach(node => {
+            node.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                if (!node.classList.contains('occupied')) node.classList.add('drag-over');
+            });
+
+            node.addEventListener('dragleave', () => node.classList.remove('drag-over'));
+
+            node.addEventListener('drop', (e) => {
+                e.preventDefault();
+                node.classList.remove('drag-over');
+                
+                const id = node.getAttribute('data-id');
+                if (!infrastructureState[id]) {
+                    infrastructureState[id] = {
+                        name: node.querySelector('.node-name').innerText,
+                        media: node.getAttribute('data-media'),
+                        reg: node.getAttribute('data-reg')
+                    };
+                    node.classList.add('occupied');
+                    const tag = document.createElement('div');
+                    tag.className = 'copy-tag';
+                    tag.innerText = 'Active Instance';
+                    node.appendChild(tag);
+
+                    writeLog(`Data Mapping: Synchronized instance pipeline to node [${infrastructureState[id].name}].`);
+                    evaluateMatrixMetrics();
+                }
+            });
+        });
+
+        function evaluateMatrixMetrics() {
+            const keys = Object.keys(infrastructureState);
+            const totalCopies = keys.length;
+            const mediaTypes = new Set();
+            const regions = new Set();
+
+            keys.forEach(k => {
+                mediaTypes.add(infrastructureState[k].media);
+                regions.add(infrastructureState[k].reg);
+            });
+
+            document.getElementById('val-copies').innerText = totalCopies;
+            document.getElementById('val-media').innerText = mediaTypes.size;
+            document.getElementById('val-sovereign').innerText = `${regions.size} / 2 Reg`;
+
+            toggleMetricBoxPass('card-copies', totalCopies >= 3);
+            toggleMetricBoxPass('card-media', mediaTypes.size >= 2);
+            toggleMetricBoxPass('card-sovereign', regions.size >= 2);
+
+            return { totalCopies, mediaCount: mediaTypes.size, regionCount: regions.size };
+        }
+
+        function toggleMetricBoxPass(elementId, isPassing) {
+            const el = document.getElementById(elementId);
+            if (isPassing) el.classList.add('pass');
+            else el.classList.remove('pass');
+        }
+
+        function writeLog(message) {
+            const timestamp = new Date().toISOString().slice(11, 19);
+            logStream.innerHTML += `<br>[${timestamp}] ${message}`;
+            logStream.scrollTop = logStream.scrollHeight;
+        }
+
+        btnReset.addEventListener('click', () => {
+            Object.keys(infrastructureState).forEach(k => delete infrastructureState[k]);
+            storageNodes.forEach(node => {
+                node.classList.remove('occupied');
+                const tag = node.querySelector('.copy-tag');
+                if (tag) tag.remove();
+            });
+            optCrr.value = 'disabled';
+            optImmutable.value = 'disabled';
+            optMfa.value = 'disabled';
+            evaluateMatrixMetrics();
+            writeLog("System: Clear sequence ran. Multi-region landscape at baseline.");
+        });
+
+        btnSimulate.addEventListener('click', () => {
+            const metrics = evaluateMatrixMetrics();
+            const selectedThreat = optThreat.value;
+            const isWorm = optImmutable.value === 'enabled';
+            const isCrr = optCrr.value === 'enabled';
+            const isMfa = optMfa.value === 'enabled';
+            
+            writeLog(`ALERT: Deploying event drill profiles against system grids...`);
+
+            const modal = document.getElementById('drill-modal');
+            const h = document.getElementById('m-header');
+            const b = document.getElementById('m-body');
+
+            const has3Copies = metrics.totalCopies >= 3;
+            const has2Media = metrics.mediaCount >= 2;
+            const hasGeoDiversity = metrics.regionCount >= 2;
+            const fullCompliance = has3Copies && has2Media && hasGeoDiversity;
+
+            let statusTitle = "";
+            let htmlReport = "";
+            let rto = "Infinite";
+            let rpo = "Infinite";
+
+            const rollSurprise = Math.random() < 0.45;
+            
+            if (rollSurprise && Object.keys(infrastructureState).length > 0) {
+                const surpriseRoll = Math.random();
+                modalCloseBtn.onclick = closeDrillModal;
+                modalCloseBtn.innerText = "Acknowledge & Continue";
+                
+                if (surpriseRoll < 0.5) {
+                    statusTitle = "💥 UNPREDICTABLE INCIDENT: Solar Flare Event";
+                    h.style.color = "var(--accent-orange)";
+                    rto = "72 Hours"; rpo = "Last Physical Sync";
+                    htmlReport = `<strong>Incident Vector:</strong> An unpredicted coronal mass ejection hits European tracking skies. Magnetic tape layers suffer localized radiation tracking faults.<br><br>
+                    <strong>Recovery Validation:</strong> CLOUD OBJECT LOCK SAVE. While local physical tape libraries suffered metadata corruption, your online active cloud object repositories avoided radiation interference. System failover executed successfully.`;
+                    b.innerHTML = htmlReport;
+                    modal.style.display = 'flex';
+                    writeLog("🚨 CRITICAL CRASH: Geomagnetic solar activity detected.");
+                    return;
+                } else {
+                    statusTitle = "⚓ UNPREDICTABLE INCIDENT: Undersea Fiber Severance";
+                    h.style.color = "var(--accent-orange)";
+                    rto = "12 Hours"; rpo = "Pre-Incident Sync";
+                    htmlReport = `<strong>Incident Vector:</strong> A maritime commercial vessel accidentally drags its anchor line along the seabed floor, severing primary fiber trunk links between London and Frankfurt.<br><br>
+                    <strong>Recovery Validation:</strong> LOCALIZED JURISDICTION SAVE. Inter-region cross-border networks dropped instantly. Because you maintained standalone backup architectures within the home country boundary, local operations continued without falling into infinite remote tracking dependency loops.`;
+                    b.innerHTML = htmlReport;
+                    modal.style.display = 'flex';
+                    writeLog("🚨 CRITICAL DISCONNECT: Inter-region transit trunks severed.");
+                    return;
+                }
+            }
+
+            if (selectedThreat === 'flood') {
+                if (hasGeoDiversity) {
+                    statusTitle = "🟢 STRATEGY RESILIENT (UK Outage - EU Active)";
+                    h.style.color = "var(--accent-green)";
+                    rto = "2 Hours"; rpo = "Near-Zero";
+                    htmlReport = `<strong>Incident Scope:</strong> Massive flooding takes out primary facilities in London. All UK storage nodes drop offline.<br><br>
+                    <strong>Recovery Validation:</strong> SUCCESS. Adhering to geo-diversity guidelines saved operations. European cloud and tape nodes immediately assumed primary transaction recovery roles.`;
+                } else {
+                    statusTitle = "🔴 TOTAL SOVEREIGN LOSS (No EU Geo-redundancy)";
+                    h.style.color = "var(--accent-red)";
+                    htmlReport = `<strong>Incident Scope:</strong> London flooding destroyed local SAN and NAS arrays.<br><br>
+                    <strong>Recovery Validation:</strong> AUDIT FAILURE. You grouped all resources inside one country's borders. With no off-shore replication targets active, your data vanished completely.`;
+                }
+            } 
+            else if (selectedThreat === 'ransomware') {
+                if (fullCompliance && isWorm) {
+                    statusTitle = "🟢 INFRASTRUCTURE SECURED (WORM Enforced)";
+                    h.style.color = "var(--accent-green)";
+                    rto = "1 Hour"; rpo = "Real-time";
+                    htmlReport = `<strong>Incident Scope:</strong> Ransomware targets your cluster and attempts to overwrite files across borders.<br><br>
+                    <strong>Recovery Validation:</strong> SUCCESS. The system blocked malicious write attempts because your **WORM immutability switches were turned on**. Historical data cannot be altered.`;
+                } else {
+                    statusTitle = "🔴 GLOBAL CROSS-BORDER ENCRYPTION";
+                    h.style.color = "var(--accent-red)";
+                    htmlReport = `<strong>Incident Scope:</strong> Ransomware encrypts standard partitions and propagates via active network lanes directly into connected European targets.<br><br>
+                    <strong>Recovery Validation:</strong> COMPROMISED. Without active WORM locks, your secondary cloud replication targets were overwritten by the encryption loop.`;
+                }
+            } 
+            else if (selectedThreat === 'insider') {
+                if (fullCompliance && isMfa) {
+                    statusTitle = "🟢 ATTEMPT BLOCKED (Hardware Token Checked)";
+                    h.style.color = "var(--accent-green)";
+                    rto = "Immediate"; rpo = "Zero Data Loss";
+                    htmlReport = `<strong>Incident Scope:</strong> A rogue employee uses stolen root administrative keys to clear the global backup landscape.<br><br>
+                    <strong>Recovery Validation:</strong> SUCCESS. The cloud architecture rejected the deletion command because it **demanded an out-of-band hardware MFA code** that the bad actor did not possess.`;
+                } else {
+                    statusTitle = "🔴 SYSTEM WIPE (No MFA Delete Active)";
+                    h.style.color = "var(--accent-red)";
+                    htmlReport = `<strong>Incident Scope:</strong> Insider threat successfully calls a programmatic wipe of all connected accounts.<br><br>
+                    <strong>Recovery Validation:</strong> STRATEGIC FAILURE. Admin keys had the absolute power to clear all storage targets across both UK and European sites because no secondary verification gate stopped them.`;
+                }
+            } 
+            else if (selectedThreat === 'regional') {
+                if (fullCompliance && isCrr) {
+                    statusTitle = "🟢 AUTOMATIC GEOGRAPHIC FAILOVER ACTIVE";
+                    h.style.color = "var(--accent-green)";
+                    rto = "15 Minutes"; rpo = "5 Minutes";
+                    htmlReport = `<strong>Incident Scope:</strong> A structural failure crashes the entire power grid across the United Kingdom.<br><br>
+                    <strong>Recovery Validation:</strong> SUCCESS. Because **Cross-Region Replication (CRR)** was fully operational and backed by active European targets, your application state failed over instantly to continental clusters.`;
+                } else {
+                    statusTitle = "🔴 SERVICE STALLED (Single-Jurisdiction Network)";
+                    h.style.color = "var(--accent-orange)";
+                    htmlReport = `<strong>Incident Scope:</strong> Total UK regional blackout.<br><br>
+                    <strong>Recovery Validation:</strong> STALLED. Your data might be safe, but because you turned off Cross-Region Replication or lacked active continental nodes, you cannot point your traffic anywhere else. The company stays offline.`;
+                }
+            }
+
+            htmlReport += `<br><br><div style="display:flex; justify-content:space-around; background:#0f172a; padding:10px; border-radius:6px; border:1px solid #334155;">
+                <div><strong>Achieved RTO:</strong> <span style="color:var(--accent-blue)">${rto}</span></div>
+                <div><strong>Achieved RPO:</strong> <span style="color:var(--accent-blue)">${rpo}</span></div>
+            </div>`;
+
+            modalCloseBtn.onclick = closeDrillModal;
+            modalCloseBtn.innerText = "Acknowledge & Continue";
+            b.innerHTML = htmlReport;
+            modal.style.display = 'flex';
+        });
+
+        function closeDrillModal() {
+            document.getElementById('drill-modal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
