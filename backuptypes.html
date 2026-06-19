@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Backup Types Design & Restore Lab</title>
+    <title>Sovereign Backup Types & Restoration Sandbox</title>
     <style>
         :root {
             --bg-dark: #0b0f19;
@@ -60,6 +60,7 @@
             font-size: 0.95rem;
         }
 
+        /* Top-tier Task Navigation Bar */
         .task-bar {
             display: flex;
             gap: 10px;
@@ -68,13 +69,14 @@
             border-radius: 8px;
             border: 1px solid #1e293b;
             align-items: center;
+            flex-wrap: wrap;
         }
 
         .task-btn {
             background-color: #1e293b;
             color: var(--accent-blue);
             border: 1px solid #334155;
-            padding: 8px 16px;
+            padding: 8px 14px;
             border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
@@ -86,6 +88,18 @@
             background-color: #334155;
             color: white;
             border-color: var(--accent-blue);
+        }
+
+        .evidence-btn {
+            background-color: rgba(249, 115, 22, 0.1);
+            color: var(--accent-orange);
+            border: 1px solid rgba(249, 115, 22, 0.4);
+        }
+
+        .evidence-btn:hover {
+            background-color: var(--accent-orange);
+            color: var(--bg-dark);
+            border-color: var(--accent-orange);
         }
 
         .workspace-grid {
@@ -120,7 +134,7 @@
             flex-direction: column;
             gap: 6px;
             background: rgba(15, 23, 42, 0.3);
-            padding: 10px;
+            padding: 12px;
             border-radius: 8px;
             border: 1px solid #1e293b;
         }
@@ -289,61 +303,68 @@
         <header>
             <div class="header-info">
                 <h1>Backup Strategy & Restoration Lab</h1>
-                <p>Interactive Custom Design: Full vs. Differential vs. Incremental Operations</p>
+                <p>Interactive Custom Rotation Design and Media Chain Verification Sandbox</p>
             </div>
             <div>
                 <span class="badge" style="background-color: #1e3a8a; color: #60a5fa; padding: 6px 12px; font-size: 0.85rem;">Session Module 2</span>
             </div>
         </header>
 
+        <!-- Dynamic Dashboard Module Controls -->
         <div class="task-bar">
-            <span style="font-weight:bold; font-size:0.9rem; color:var(--text-muted); margin-right:10px;">📋 APPRENTICE OBJECTIVES:</span>
-            <button class="task-btn" onclick="showTaskGuide(1)">Task 1: Differential Design</button>
-            <button class="task-btn" onclick="showTaskGuide(2)">Task 2: Incremental Design</button>
-            <button class="task-btn" onclick="showTaskGuide(3)">Task 3: Recovery Evidence</button>
+            <span style="font-weight:bold; font-size:0.9rem; color:var(--text-muted); margin-right:10px;">📋 LAB INTERFACES:</span>
+            <button class="task-btn" onclick="showTaskGuide(1)">Stage 1: Differential Run</button>
+            <button class="task-btn" onclick="showTaskGuide(2)">Stage 2: Incremental Run</button>
+            <button class="task-btn" onclick="showTaskGuide(3)">Stage 3: Hybrid Analysis</button>
+            <button class="task-btn evidence-btn" onclick="showTaskGuide(4)">📸 Evidence Required</button>
         </div>
 
         <div class="workspace-grid">
             
+            <!-- LEFT PANEL: Diagnostic Terminal -->
             <div class="panel">
-                <div class="panel-title">1. Strategy Controller Diagnostics</div>
+                <div class="panel-title">1. Diagnostics & Management</div>
                 
                 <div class="setting-control">
-                    <label>Active Controller Stream</label>
-                    <div class="control-purpose">Tracks real-time system allocation changes, configuration mutations, and storage array logs.</div>
-                    <div class="terminal-log" id="log-stream">> Backup array online. Define daily type policies to build the schedule layout...</div>
+                    <label>Storage Controller Tracking Logs</label>
+                    <div class="control-purpose">Monitors file sector updates, custom rotation scheduling data changes, and tape drive allocation actions.</div>
+                    <div class="terminal-log" id="log-stream">> Storage automation kernel online. Configure calendar properties to evaluate rotation trees...</div>
                 </div>
 
                 <button class="action-btn" id="btn-verify">Initiate Restore Operations</button>
                 <button class="action-btn" id="btn-reset" style="background-color:#334155; color:white;">Reset Schedule Grid</button>
             </div>
 
+            <!-- RIGHT PANEL: Interactive Calendar Schedule & Mount Matrix Grid -->
             <div class="panel">
-                <div class="panel-title">2. Custom Backup Schedule & Mounting Array</div>
+                <div class="panel-title">2. Custom Backup Schedule & Media Allocation Matrix</div>
                 
                 <div class="crash-banner">
-                    ⚠️ CRITICAL STORAGE FAULT: Production array suffered a complete hardware crash on Friday at 14:00. State lost.
+                    ⚠️ CRITICAL STORAGE FAULT: Production file array suffered a hardware failure on Friday at 14:00. Production data offline.
                 </div>
 
                 <p style="margin:0; font-size:0.85rem; color:var(--text-muted); line-height:1.4;">
-                    <strong>Instructions:</strong> First, design the backup rotation schedule by using the dropdown options for each day. Second, check the "Mount Tape" boxes to select exactly which recovery tapes to pass into the restoration stream.
+                    <strong>Step 1:</strong> Design your rotation model by picking a backup category type for each day. <br>
+                    <strong>Step 2:</strong> Check the "Mount Tape" boxes to choose which specific recovery media archives to pull into the storage restoration loop.
                 </p>
 
                 <div class="timeline-container">
                     <div class="week-track" id="timeline-grid">
-                        </div>
+                        <!-- Instantiated by Javascript -->
+                    </div>
                 </div>
             </div>
 
         </div>
     </div>
 
+    <!-- Interface Dialog Modals popups window -->
     <div class="modal-overlay" id="drill-modal">
         <div class="modal-card">
-            <div class="modal-header" id="m-header">Processing Verification...</div>
-            <div class="modal-body" id="m-body">Loading...</div>
+            <div class="modal-header" id="m-header">Processing Verification Request...</div>
+            <div class="modal-body" id="m-body">Staging system metadata...</div>
             <div style="text-align: right;">
-                <button class="modal-close" id="btn-modal-close" onclick="closeDrillModal()">Close Window</button>
+                <button class="modal-close" id="btn-modal-close" onclick="closeDrillModal()">Acknowledge & Continue</button>
             </div>
         </div>
     </div>
@@ -361,48 +382,56 @@
         const modalBody = document.getElementById('m-body');
         const modalCloseBtn = document.getElementById('btn-modal-close');
 
-        // Embedded Task Guidelines Object
+        // Segmented Task Context Dictionary Mapping
         const taskInstructions = {
             1: {
-                title: "Task 1: Design and Restore a Differential Strategy",
-                body: `<strong>Objective:</strong> Build a valid Sunday Full + Daily Differential rotation schedule, then execute an optimized recovery.<br><br>
+                title: "Stage 1: Design and Rebuild a Differential Framework",
+                body: `<strong>Objective:</strong> Reconstruct the system data state using an optimized Differential rotation model.<br><br>
                        <strong>Instructions:</strong><br>
-                       1. Set <strong>Sunday</strong> to <em>'Full'</em>.<br>
-                       2. Set <strong>Monday through Friday</strong> dropdowns to <em>'Differential'</em>.<br>
-                       3. Figure out the absolute minimum number of media volumes needed to recover up to Friday morning without loading redundant files.<br>
-                       4. Check the correct 'Mount Tape' boxes and click <strong>Initiate Restore Operations</strong> to verify.`
+                       1. Set <strong>Sunday</strong> to <em>'Full'</em> (this forms your recovery baseline).<br>
+                       2. Configure every dropdown option from <strong>Monday through Friday</strong> as <em>'Differential'</em>.<br>
+                       3. Locate the absolute lowest number of physical tape assets needed to catch up to Friday morning's data state without parsing repeating data layers.<br>
+                       4. Check the appropriate 'Mount Tape' items and click **Initiate Restore Operations**.`
             },
             2: {
-                title: "Task 2: Design and Restore an Incremental Strategy",
-                body: `<strong>Objective:</strong> Build a Sunday Full + Daily Incremental backup schedule, then execute a complete restore sequence.<br><br>
+                title: "Stage 2: Design and Rebuild an Incremental Framework",
+                body: `<strong>Objective:</strong> Reconstruct your server files sequentially along an Incremental log chain tracking timeline.<br><br>
                        <strong>Instructions:</strong><br>
-                       1. Keep <strong>Sunday</strong> set to <em>'Full'</em>.<br>
-                       2. Shift <strong>Monday through Friday</strong> options to <em>'Incremental'</em>.<br>
-                       3. Check the correct combination of tapes needed to safely recompile the sequential data chain without triggering a logic gap.<br>
-                       4. Click <strong>Initiate Restore Operations</strong> to analyze the recovery mechanics.`
+                       1. Retain <strong>Sunday</strong> set to <em>'Full'</em>.<br>
+                       2. Shift all weekday select dropdown metrics from <strong>Monday through Friday</strong> to <em>'Incremental'</em>.<br>
+                       3. Select the precise sequential combination of log volumes needed to play back every increment without provoking data continuity holes.<br>
+                       4. Run verification and observe the restoration infrastructure requirements differences.`
             },
             3: {
-                title: "Task 3: Submission Evidence Capture",
-                body: `<strong>Objective:</strong> Document your successful restoration strategies for assessment.<br><br>
-                       <strong>Submission Instructions:</strong><br>
-                       Achieve a flawless <strong>Optimal Restore Success</strong> state for BOTH Strategy 1 (Differential) and Strategy 2 (Incremental).<br><br>
-                       For each successful pass window, take a clear screenshot showing:<br>
-                       • The configuration layout of your daily dropdown selectors.<br>
-                       • The green success header and verification summary text inside the popup box.<br><br>
-                       Save your images as <em>'Differential_Success_[Name].png'</em> and <em>'Incremental_Success_[Name].png'</em> and send them to your instructor.`
+                title: "Stage 3: Advanced Hybrid Custom Testing Configuration",
+                body: `<strong>Objective:</strong> Explore mixed storage failure parameters outside standard boundaries.<br><br>
+                       <strong>Instructions:</strong><br>
+                       Our recovery engine is built on enterprise index automation templates. Mix matching your calendar layout choices (e.g., configuring Tuesday as an Incremental while leaving Wednesday as a Differential) creates unstructured data gaps.<br><br>
+                       Try running a mixed configuration layout during your sandbox exploration to document why companies enforce uniform, predictable data policy schemas across rotation cycles.`
+            },
+            4: {
+                title: "📸 LAB SIGN-OFF: Evidence Requirements Matrix",
+                body: `<strong>Submission Deliverables:</strong><br>
+                       You must submit visual evidence of clear, optimal recovery executions for both core methods to complete this module audit pass criteria.<br><br>
+                       <strong>Evidence Captures:</strong><br>
+                       Execute a clean pass for <strong>Stage 1 (Differential optimal build)</strong> and <strong>Stage 2 (Incremental optimal build)</strong>. For each success window, pull a screenshot (<strong>Windows Key + Shift + S</strong> or <strong>Cmd + Shift + 4</strong>) demonstrating:<br><br>
+                       • The selection profile layout of your weekly backup dropdown cards.<br>
+                       • The green <strong>'Restore Success'</strong> notification header text box showing inside the simulation results overview window.<br><br>
+                       Label files as <em>'Differential_Pass.png'</em> and <em>'Incremental_Pass.png'</em> to secure instructor sign-off confirmation.`
             }
         };
 
         function showTaskGuide(id) {
             modalHeader.innerText = taskInstructions[id].title;
-            modalHeader.style.color = "var(--accent-blue)";
+            if (id === 4) modalHeader.style.color = "var(--accent-orange)";
+            else modalHeader.style.color = "var(--accent-blue)";
+            
             modalBody.innerHTML = taskInstructions[id].body;
             modalCloseBtn.onclick = closeDrillModal;
             modalCloseBtn.innerText = "Close Guide & Resume Lab";
             modal.style.display = 'flex';
         }
 
-        // Generate the custom interaction grid map
         function initGrid() {
             timelineGrid.innerHTML = '';
             dayIds.forEach((id, idx) => {
@@ -429,13 +458,13 @@
 
         function logTypeChange(id, name) {
             const val = document.getElementById(`select-${id}`).value;
-            writeLog(`Schedule Update: Assigned ${name} as a [${val.toUpperCase()}] operational window.`);
+            writeLog(`System: Configured ${name} slot allocation property state as [${val.toUpperCase()}].`);
         }
 
         function logTapeMount(id, name) {
-            const active = document.getElementById(`check-${id}`).checked;
-            if (active) writeLog(`Tape Array: Mounted ${name} volume into active restore buffer.`);
-            else writeLog(`Tape Array: De-allocated ${name} volume from restore queue.`);
+            const state = document.getElementById(`check-${id}`).checked;
+            if (state) writeLog(`Mount: Array tape loader locked onto volume [${name} Archive].`);
+            else writeLog(`Mount: Purged volume [${name} Archive] from execution staging buffer.`);
         }
 
         function writeLog(message) {
@@ -446,10 +475,10 @@
 
         btnReset.addEventListener('click', () => {
             initGrid();
-            writeLog("System Notification: Reset sequence executed. Rotation layout cleared.");
+            writeLog("System Alert: Purged scheduling matrices. Resetting grid variables to baseline values.");
         });
 
-        // Combined Evaluation Logic Engine
+        // Calculations Validation Audit Matrix Engine
         btnVerify.addEventListener('click', () => {
             let config = {};
             let mounted = {};
@@ -460,69 +489,69 @@
             });
 
             modalHeader.style.color = "var(--accent-red)";
-            modalCloseBtn.innerText = "Modify Sequence Matrix";
+            modalCloseBtn.innerText = "Modify Sequence Parameters";
             modalCloseBtn.onclick = closeDrillModal;
 
-            // Baseline check: Does a Sunday Full backup exist?
+            // Integrity Rule 1: Initial baseline check
             if (config['sun'] !== 'Full') {
-                modalHeader.innerText = "❌ Restore Failed: Missing Baseline";
-                modalBody.innerHTML = "Critical Error: Every recovery sequence requires an initial **Full Backup Baseline** to anchor the filesystem files before any change logs can be processed.";
+                modalHeader.innerText = "❌ Restore Failed: Missing Initial Baseline Anchor";
+                modalBody.innerHTML = "Critical Validation Halt: You must schedule **Sunday as a Full Backup** to build an initial baseline snapshot framework. Delta data logs cannot execute mapping chains in thin air.";
                 modal.style.display = 'flex';
                 return;
             }
 
+            // Integrity Rule 2: Baseline mount validation
             if (!mounted['sun']) {
-                modalHeader.innerText = "❌ Restore Failed: Broken Baseline Anchor";
-                modalBody.innerHTML = "Critical Error: You configured Sunday as a Full backup, but you did not check its **Mount Tape** box. The recovery engine cannot apply delta points onto an unmounted base database.";
+                modalHeader.innerText = "❌ Restore Failed: Missing Baseline Volume Tape";
+                modalBody.innerHTML = "Critical Validation Halt: Although Sunday is configured as a Full baseline, you left its **Mount Tape** checkbox unselected. Replay calculations are completely stuck without access to the baseline database layers.";
                 modal.style.display = 'flex';
                 return;
             }
 
-            // Determine what strategy the user has designed based on the Monday-Friday selector states
-            const typesList = dayIds.slice(1).map(id => config[id]);
-            const allDiff = typesList.every(t => t === 'Differential');
-            const allInc = typesList.every(t => t === 'Incremental');
+            const weekTypes = dayIds.slice(1).map(id => config[id]);
+            const uniformDiff = weekTypes.every(t => t === 'Differential');
+            const uniformInc = weekTypes.every(t => t === 'Incremental');
 
-            if (allDiff) {
-                // EVALUATING CUSTOM DIFFERENTIAL CONFIGURATION
-                const totalMounted = Object.values(mounted).filter(Boolean).length;
-                if (mounted['sun'] && mounted['fri'] && totalMounted === 2) {
+            if (uniformDiff) {
+                // EVALUATION PIPELINE: DIFFERENTIAL SYSTEM LAYOUTS
+                const mountVolumeTotal = Object.values(mounted).filter(Boolean).length;
+                if (mounted['sun'] && mounted['fri'] && mountVolumeTotal === 2) {
                     modalHeader.innerText = "🟢 Optimal Differential Restore Success!";
                     modalHeader.style.color = "var(--accent-green)";
-                    modalBody.innerHTML = `🏆 <strong>Verification Passed!</strong><br><br>
-                                           Your configuration is fully optimized. Because a <strong>Differential Backup</strong> aggregates all changes made since the last Full baseline, you only need to process the initial Sunday Full tape and the most recent Friday Differential tape volume.<br><br>
+                    modalBody.innerHTML = `🏆 <strong>Verification Complete: Optimal Sequence Unlocked!</strong><br><br>
+                                           Your media mounting configuration is perfectly optimized. Because a <strong>Differential Backup</strong> logs *every data shift recorded since the initial Full baseline snapshot*, you only need to run the Sunday base snapshot plus the latest Friday delta tracking layer.<br><br>
                                            • <strong>Tapes Mounted:</strong> 2 Volumes.<br>
-                                           • <strong>RTO Efficiency:</strong> Maximum. Monday through Thursday were skipped cleanly, avoiding data block overhead.`;
-                } else if (mounted['sun'] && mounted['fri'] && totalMounted > 2) {
-                    modalHeader.innerText = "🟡 Restore Completed With Redundancies";
+                                           • <strong>RTO Time Metrics:</strong> Excellent. Monday through Thursday data blocks were skipped, saving massive processing windows.`;
+                } else if (mounted['sun'] && mounted['fri'] && mountVolumeTotal > 2) {
+                    modalHeader.innerText = "🟡 Restore Completed (Redundant Data Handled)";
                     modalHeader.style.color = "var(--accent-orange)";
-                    modalBody.innerHTML = `⚠️ <strong>Data Restored, But Strategy Sub-Optimal.</strong><br><br>
-                                           The data center is back online, but your recovery pipeline was inefficient. You included mid-week differential tapes (Monday-Thursday). Since Friday's tape already contains those changes, processing middle intervals duplicates operations and hurts your RTO.`;
+                    modalBody.innerHTML = `⚠️ <strong>System Restored but Recovery Metrics Weak.</strong><br><br>
+                                           The data was recovered, but your execution sequence included unnecessary mid-week tapes (Monday-Thursday). Since Friday's tape already captures all modifications from earlier in the week, replaying middle deltas creates redundant processing operations and extends system downtime.`;
                 } else {
-                    modalHeader.innerText = "❌ Restore Failed: Incomplete Delta Profile";
-                    modalBody.innerHTML = "Error: You mounted Sunday, but missed the latest Friday tape. Your production data states are stuck five days out of date.";
+                    modalHeader.innerText = "❌ Restore Failed: Incomplete Data Delta Snapshot";
+                    modalBody.innerHTML = "Error: You mounted Sunday, but missed the latest Friday tape layer. Your active file structure data state is stuck five days behind, resulting in lost files.";
                 }
-            } else if (allInc) {
-                // EVALUATING CUSTOM INCREMENTAL CONFIGURATION
-                const allMounted = Object.values(mounted).every(Boolean);
-                if (allMounted) {
+            } else if (uniformInc) {
+                // EVALUATION PIPELINE: INCREMENTAL SYSTEM LAYOUTS
+                const completeChainMounted = Object.values(mounted).every(Boolean);
+                if (completeChainMounted) {
                     modalHeader.innerText = "🟢 Optimal Incremental Restore Success!";
                     modalHeader.style.color = "var(--accent-green)";
-                    modalBody.innerHTML = `🏆 <strong>Verification Passed!</strong><br><br>
-                                           Your sequential recovery chain is complete. Because an <strong>Incremental Backup</strong> logs only what changed since the immediate previous day, you must replay every single day in perfect historical order.<br><br>
-                                           • <strong>Tapes Mounted:</strong> 6 Volumes required.<br>
-                                           • <strong>Risk Parameter:</strong> This keeps daily backup windows incredibly small, but the restoration chain is highly vulnerable. If even a single tape is lost or corrupted, the entire rest of the chain breaks!`;
+                    modalBody.innerHTML = `🏆 <strong>Verification Complete: Full Log Chain Restored!</strong><br><br>
+                                           Your sequential tracking path is validated. Because an <strong>Incremental Backup</strong> records *only data block changes tracking back to the immediate previous backup event*, you must manually mount and process every single day's tape volume in exact timeline order.<br><br>
+                                           • <strong>Tapes Mounted:</strong> 6 Volumes needed.<br>
+                                           • <strong>Strategic Vulnerability:</strong> While this keeps daily backup windows incredibly small, it makes your disaster recovery highly fragile. If even one tape volume is damaged or lost mid-week, the chain breaks and data loss occurs.`;
                 } else if (mounted['sun'] && mounted['fri'] && Object.values(mounted).filter(Boolean).length === 2) {
-                    modalHeader.innerText = "❌ Restore Failed: Corrupt Log Linkage";
-                    modalBody.innerHTML = "Error: You only mounted Sunday and Friday within an Incremental layout. Friday's incremental backup only knows what happened since Thursday. You are missing all data modifications from Monday, Tuesday, Wednesday, and Thursday.";
+                    modalHeader.innerText = "❌ Restore Failed: Broken Data Log Continuity";
+                    modalBody.innerHTML = "Error: You pulled Sunday and Friday into the staging array only. Within an Incremental schema, Friday's tape only holds file tracking updates generated since Thursday morning. You are missing all blocks from Monday, Tuesday, Wednesday, and Thursday.";
                 } else {
-                    modalHeader.innerText = "❌ Restore Failed: Broken Log Chain Link";
-                    modalBody.innerHTML = "Error: Missing links detected. An incremental sequence acts like links in a chain. If you fail to mount even one single day (e.g., Tuesday), the recovery controller cannot index the data states for the following days.";
+                    modalHeader.innerText = "❌ Restore Failed: Fractured Chain Linkage Detected";
+                    modalBody.innerHTML = "Error: Missing links detected inside your restoration profile. If you skip even one day's incremental log volume tape (e.g., Tuesday), the storage engine cannot trace sector changes for the remaining periods.";
                 }
             } else {
-                // MISCONFIGURED / MIXED JUMBLED GRID CONTEXT
-                modalHeader.innerText = "❌ Restore Failed: Invalid Rotation Design";
-                modalBody.innerHTML = "Validation Error: Your rotation schedule contains an unaligned mixture of backup types. Standard cloud enterprise operations require a clean, uniform choice between a consistent Differential or Incremental schema to maintain tracking indexes.";
+                // FALLBACK: IRREGULAR HYBRID ARCHITECTURE ALERTS
+                modalHeader.innerText = "❌ Restore Failed: Misaligned Hybrid Rotation Schedule";
+                modalBody.innerHTML = "Operational Structure Error: Your configuration contains an irregular mix of backup tracking types. Corporate data networks require choosing either a strict Differential or Incremental model to maintain functional file tracking indices.";
             }
 
             modal.style.display = 'flex';
