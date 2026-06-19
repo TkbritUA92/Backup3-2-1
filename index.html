@@ -60,7 +60,6 @@
             font-size: 0.95rem;
         }
 
-        /* Task navigation dashboard styling */
         .task-bar {
             display: flex;
             gap: 10px;
@@ -548,8 +547,8 @@
         const optCrr = document.getElementById('setting-crr');
         const optMfa = document.getElementById('setting-mfa');
         const optThreat = document.getElementById('setting-threat');
+        const modalCloseBtn = document.getElementById('btn-modal-close');
 
-        // Text Matrix Guide Object Mapping
         const taskInstructions = {
             1: {
                 title: "Task 1: Establish Geo-Distributed Topology Baseline",
@@ -585,126 +584,3 @@
 
         function showTaskGuide(taskId) {
             const modal = document.getElementById('drill-modal');
-            const h = document.getElementById('m-header');
-            const b = document.getElementById('m-body');
-            const closeBtn = document.getElementById('btn-modal-close');
-
-            h.innerText = taskInstructions[taskId].title;
-            h.style.color = "var(--accent-blue)";
-            b.innerHTML = taskInstructions[taskId].body;
-            
-            closeBtn.setAttribute('onclick', 'closeDrillModal()');
-            closeBtn.innerText = "Close Guide & Resume Lab";
-            modal.style.display = 'flex';
-        }
-
-        retentionSlider.addEventListener('input', (e) => {
-            retentionVal.innerText = `${e.target.value} Days rotation`;
-            writeLog(`System: Rotational gap window shifted to ${e.target.value} days.`);
-        });
-
-        optImmutable.addEventListener('change', (e) => writeLog(`Policy: Sovereign immutability token set to [${e.target.value.toUpperCase()}].`));
-        
-        optCrr.addEventListener('change', (e) => {
-            if (e.target.value === 'enabled') {
-                const hasUk = Object.values(infrastructureState).some(n => n.reg === 'uk');
-                const hasEu = Object.values(infrastructureState).some(n => n.reg === 'eu');
-                
-                if (!hasUk || !hasEu) {
-                    writeLog(`❌ Inter-Region Block: Cross-Region Replication requires active target endpoints in both UK and EU jurisdictions concurrently.`);
-                    e.target.value = 'disabled';
-                    return;
-                }
-            }
-            writeLog(`Policy: Inter-Region Cross-Replication toggled to [${e.target.value.toUpperCase()}].`);
-        });
-
-        optMfa.addEventListener('change', (e) => writeLog(`Policy: MFA operational rule updated to [${e.target.value.toUpperCase()}].`));
-
-        payloadToken.addEventListener('dragstart', (e) => e.dataTransfer.setData('text/plain', 'payload'));
-
-        storageNodes.forEach(node => {
-            node.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                if (!node.classList.contains('occupied')) node.classList.add('drag-over');
-            });
-
-            node.addEventListener('dragleave', () => node.classList.remove('drag-over'));
-
-            node.addEventListener('drop', (e) => {
-                e.preventDefault();
-                node.classList.remove('drag-over');
-                
-                const id = node.getAttribute('data-id');
-                if (!infrastructureState[id]) {
-                    infrastructureState[id] = {
-                        name: node.querySelector('.node-name').innerText,
-                        media: node.getAttribute('data-media'),
-                        reg: node.getAttribute('data-reg')
-                    };
-                    node.classList.add('occupied');
-                    const tag = document.createElement('div');
-                    tag.className = 'copy-tag';
-                    tag.innerText = 'Active Instance';
-                    node.appendChild(tag);
-
-                    writeLog(`Data Mapping: Synchronized instance pipeline to node [${infrastructureState[id].name}].`);
-                    evaluateMatrixMetrics();
-                }
-            });
-        });
-
-        function evaluateMatrixMetrics() {
-            const keys = Object.keys(infrastructureState);
-            const totalCopies = keys.length;
-            const mediaTypes = new Set();
-            const regions = new Set();
-
-            keys.forEach(k => {
-                mediaTypes.add(infrastructureState[k].media);
-                regions.add(infrastructureState[k].reg);
-            });
-
-            document.getElementById('val-copies').innerText = totalCopies;
-            document.getElementById('val-media').innerText = mediaTypes.size;
-            document.getElementById('val-sovereign').innerText = `${regions.size} / 2 Reg`;
-
-            toggleMetricBoxPass('card-copies', totalCopies >= 3);
-            toggleMetricBoxPass('card-media', mediaTypes.size >= 2);
-            toggleMetricBoxPass('card-sovereign', regions.size >= 2);
-
-            return { totalCopies, mediaCount: mediaTypes.size, regionCount: regions.size };
-        }
-
-        function toggleMetricBoxPass(elementId, isPassing) {
-            const el = document.getElementById(elementId);
-            if (isPassing) el.classList.add('pass');
-            else el.classList.remove('pass');
-        }
-
-        function writeLog(message) {
-            const timestamp = new Date().toISOString().slice(11, 19);
-            logStream.innerHTML += `<br>[${timestamp}] ${message}`;
-            logStream.scrollTop = logStream.scrollHeight;
-        }
-
-        btnReset.addEventListener('click', () => {
-            Object.keys(infrastructureState).forEach(k => delete infrastructureState[k]);
-            storageNodes.forEach(node => {
-                node.classList.remove('occupied');
-                const tag = node.querySelector('.copy-tag');
-                if (tag) tag.remove();
-            });
-            optCrr.value = 'disabled';
-            optImmutable.value = 'disabled';
-            optMfa.value = 'disabled';
-            evaluateMatrixMetrics();
-            writeLog("System: Clear sequence ran. Multi-region landscape at baseline.");
-        });
-
-        btnSimulate.addEventListener('click', () => {
-            const metrics = evaluateMatrixMetrics();
-            const selectedThreat = optThreat.value;
-            const isWorm = optImmutable.value === 'enabled';
-            const isCrr = optCrr.value === 'enabled';
-            const isMfa = optMfa.value === 'enabled';
