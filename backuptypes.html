@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Backup Types Restore Lab: Full vs. Diff vs. Incremental</title>
+    <title>Backup Types Design & Restore Lab</title>
     <style>
         :root {
             --bg-dark: #0b0f19;
@@ -32,7 +32,7 @@
 
         .lab-wrapper {
             width: 100%;
-            max-width: 1400px;
+            max-width: 1450px;
             display: flex;
             flex-direction: column;
             gap: 20px;
@@ -60,9 +60,37 @@
             font-size: 0.95rem;
         }
 
+        .task-bar {
+            display: flex;
+            gap: 10px;
+            background-color: var(--panel-bg);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #1e293b;
+            align-items: center;
+        }
+
+        .task-btn {
+            background-color: #1e293b;
+            color: var(--accent-blue);
+            border: 1px solid #334155;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+
+        .task-btn:hover {
+            background-color: #334155;
+            color: white;
+            border-color: var(--accent-blue);
+        }
+
         .workspace-grid {
             display: grid;
-            grid-template-columns: 350px 1fr;
+            grid-template-columns: 380px 1fr;
             gap: 20px;
         }
 
@@ -91,12 +119,22 @@
             display: flex;
             flex-direction: column;
             gap: 6px;
+            background: rgba(15, 23, 42, 0.3);
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #1e293b;
         }
 
         .setting-control label {
             font-size: 0.85rem;
-            font-weight: 600;
-            color: #cbd5e1;
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+
+        .control-purpose {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            line-height: 1.3;
         }
 
         select {
@@ -107,9 +145,10 @@
             padding: 8px;
             border-radius: 6px;
             outline: none;
+            box-sizing: border-box;
+            font-size: 0.85rem;
         }
 
-        /* Timeline schedule styling */
         .timeline-container {
             background-color: rgba(15, 23, 42, 0.4);
             border: 1px solid #1e293b;
@@ -130,50 +169,37 @@
             background-color: var(--node-bg);
             border: 2px solid #334155;
             border-radius: 8px;
-            padding: 12px;
+            padding: 15px 12px;
             text-align: center;
-            cursor: pointer;
             transition: all 0.2s ease;
-            position: relative;
-            user-select: none;
-        }
-
-        .day-node:hover {
-            border-color: var(--accent-blue);
-            transform: translateY(-2px);
-        }
-
-        .day-node.selected {
-            border-color: var(--accent-green);
-            background-color: #064e3b;
-            box-shadow: 0 0 10px rgba(34, 197, 94, 0.3);
         }
 
         .day-name {
             font-weight: 700;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             text-transform: uppercase;
             color: #94a3b8;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
 
-        .backup-type-tag {
-            font-size: 0.75rem;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: bold;
-            display: inline-block;
+        .type-select {
+            margin-bottom: 10px;
         }
 
-        .type-full { background-color: #0284c7; color: white; }
-        .type-diff { background-color: #b45309; color: white; }
-        .type-inc { background-color: #6d28d9; color: white; }
+        .restore-checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            color: #cbd5e1;
+            border-top: 1px solid #334155;
+            padding-top: 8px;
+            margin-top: 5px;
+        }
 
-        .data-size {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-top: 8px;
-            font-family: monospace;
+        .restore-checkbox-wrapper input {
+            cursor: pointer;
         }
 
         .terminal-log {
@@ -183,7 +209,7 @@
             padding: 10px;
             font-family: monospace;
             font-size: 0.8rem;
-            height: 140px;
+            height: 160px;
             overflow-y: auto;
             color: #34d399;
         }
@@ -204,7 +230,6 @@
 
         .action-btn:hover { opacity: 0.9; }
 
-        /* Modal styling */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -263,45 +288,45 @@
         
         <header>
             <div class="header-info">
-                <h1>Backup Strategy Recovery Lab</h1>
-                <p>Interactive Reinforcement: Full vs. Differential vs. Incremental Restoration</p>
+                <h1>Backup Strategy & Restoration Lab</h1>
+                <p>Interactive Custom Design: Full vs. Differential vs. Incremental Operations</p>
             </div>
             <div>
                 <span class="badge" style="background-color: #1e3a8a; color: #60a5fa; padding: 6px 12px; font-size: 0.85rem;">Session Module 2</span>
             </div>
         </header>
 
+        <div class="task-bar">
+            <span style="font-weight:bold; font-size:0.9rem; color:var(--text-muted); margin-right:10px;">📋 APPRENTICE OBJECTIVES:</span>
+            <button class="task-btn" onclick="showTaskGuide(1)">Task 1: Differential Design</button>
+            <button class="task-btn" onclick="showTaskGuide(2)">Task 2: Incremental Design</button>
+            <button class="task-btn" onclick="showTaskGuide(3)">Task 3: Recovery Evidence</button>
+        </div>
+
         <div class="workspace-grid">
             
             <div class="panel">
-                <div class="panel-title">1. Strategy Configuration</div>
+                <div class="panel-title">1. Strategy Controller Diagnostics</div>
                 
                 <div class="setting-control">
-                    <label for="strategy-select">Active Backup Rotation Policy</label>
-                    <select id="strategy-select">
-                        <option value="diff">Strategy A: Sunday Full + Daily Differential</option>
-                        <option value="inc">Strategy B: Sunday Full + Daily Incremental</option>
-                    </select>
-                </div>
-
-                <div class="setting-control">
-                    <label>Operational Execution Log</label>
-                    <div class="terminal-log" id="log-stream">> Storage controller ready. Choose policy context to display rotation map...</div>
+                    <label>Active Controller Stream</label>
+                    <div class="control-purpose">Tracks real-time system allocation changes, configuration mutations, and storage array logs.</div>
+                    <div class="terminal-log" id="log-stream">> Backup array online. Define daily type policies to build the schedule layout...</div>
                 </div>
 
                 <button class="action-btn" id="btn-verify">Initiate Restore Operations</button>
-                <button class="action-btn" id="btn-clear" style="background-color:#334155; color:white;">Clear Selection</button>
+                <button class="action-btn" id="btn-reset" style="background-color:#334155; color:white;">Reset Schedule Grid</button>
             </div>
 
             <div class="panel">
-                <div class="panel-title">2. Scheduled Backup Chain Map</div>
+                <div class="panel-title">2. Custom Backup Schedule & Mounting Array</div>
                 
                 <div class="crash-banner">
-                    ⚠️ CRITICAL SYSTEM EVENT: Production Storage Array suffered a hardware head-crash on Friday at 14:00. Production state lost.
+                    ⚠️ CRITICAL STORAGE FAULT: Production array suffered a complete hardware crash on Friday at 14:00. State lost.
                 </div>
 
-                <p style="margin:0; font-size:0.9rem; color:var(--text-muted);">
-                    <strong>Instructions:</strong> Click on the backup media nodes below to build your restoration sequence. You must select the exact chain required to bring the system back to its latest state before the Friday crash while avoiding redundant blocks.
+                <p style="margin:0; font-size:0.85rem; color:var(--text-muted); line-height:1.4;">
+                    <strong>Instructions:</strong> First, design the backup rotation schedule by using the dropdown options for each day. Second, check the "Mount Tape" boxes to select exactly which recovery tapes to pass into the restoration stream.
                 </p>
 
                 <div class="timeline-container">
@@ -313,85 +338,104 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="result-modal">
+    <div class="modal-overlay" id="drill-modal">
         <div class="modal-card">
-            <div class="modal-header" id="m-header">Restoration Sequence Audit</div>
-            <div class="modal-body" id="m-body">Processing storage sequence data indexes...</div>
+            <div class="modal-header" id="m-header">Processing Verification...</div>
+            <div class="modal-body" id="m-body">Loading...</div>
             <div style="text-align: right;">
-                <button class="modal-close" onclick="closeModal()">Modify Sequence Matrix</button>
+                <button class="modal-close" id="btn-modal-close" onclick="closeDrillModal()">Close Window</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Data block metadata defining daily storage footprint changes
-        const backupDataMatrix = {
-            diff: [
-                { id: "sun", day: "Sunday", type: "Full", size: "500 GB", changes: "Base baseline dataset snapshot" },
-                { id: "mon", day: "Monday", type: "Differential", size: "45 GB", changes: "All modifications since Sunday" },
-                { id: "tue", day: "Tuesday", type: "Differential", size: "85 GB", changes: "All modifications since Sunday" },
-                { id: "wed", day: "Wednesday", type: "Differential", size: "120 GB", changes: "All modifications since Sunday" },
-                { id: "thu", day: "Thursday", type: "Differential", size: "165 GB", changes: "All modifications since Sunday" },
-                { id: "fri", day: "Friday (11am)", type: "Differential", size: "210 GB", changes: "All modifications since Sunday pre-crash" }
-            ],
-            inc: [
-                { id: "sun", day: "Sunday", type: "Full", size: "500 GB", changes: "Base baseline dataset snapshot" },
-                { id: "mon", day: "Monday", type: "Incremental", size: "45 GB", changes: "Modifications made on Monday only" },
-                { id: "tue", day: "Tuesday", type: "Incremental", size: "40 GB", changes: "Modifications made on Tuesday only" },
-                { id: "wed", day: "Wednesday", type: "Incremental", size: "35 GB", changes: "Modifications made on Wednesday only" },
-                { id: "thu", day: "Thursday", type: "Incremental", size: "45 GB", changes: "Modifications made on Thursday only" },
-                { id: "fri", day: "Friday (11am)", type: "Incremental", size: "45 GB", changes: "Modifications made on Friday morning only" }
-            ]
+        const dayIds = ["sun", "mon", "tue", "wed", "thu", "fri"];
+        const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday (11am)"];
+
+        const logStream = document.getElementById('log-stream');
+        const timelineGrid = document.getElementById('timeline-grid');
+        const btnVerify = document.getElementById('btn-verify');
+        const btnReset = document.getElementById('btn-reset');
+        const modal = document.getElementById('drill-modal');
+        const modalHeader = document.getElementById('m-header');
+        const modalBody = document.getElementById('m-body');
+        const modalCloseBtn = document.getElementById('btn-modal-close');
+
+        // Embedded Task Guidelines Object
+        const taskInstructions = {
+            1: {
+                title: "Task 1: Design and Restore a Differential Strategy",
+                body: `<strong>Objective:</strong> Build a valid Sunday Full + Daily Differential rotation schedule, then execute an optimized recovery.<br><br>
+                       <strong>Instructions:</strong><br>
+                       1. Set <strong>Sunday</strong> to <em>'Full'</em>.<br>
+                       2. Set <strong>Monday through Friday</strong> dropdowns to <em>'Differential'</em>.<br>
+                       3. Figure out the absolute minimum number of media volumes needed to recover up to Friday morning without loading redundant files.<br>
+                       4. Check the correct 'Mount Tape' boxes and click <strong>Initiate Restore Operations</strong> to verify.`
+            },
+            2: {
+                title: "Task 2: Design and Restore an Incremental Strategy",
+                body: `<strong>Objective:</strong> Build a Sunday Full + Daily Incremental backup schedule, then execute a complete restore sequence.<br><br>
+                       <strong>Instructions:</strong><br>
+                       1. Keep <strong>Sunday</strong> set to <em>'Full'</em>.<br>
+                       2. Shift <strong>Monday through Friday</strong> options to <em>'Incremental'</em>.<br>
+                       3. Check the correct combination of tapes needed to safely recompile the sequential data chain without triggering a logic gap.<br>
+                       4. Click <strong>Initiate Restore Operations</strong> to analyze the recovery mechanics.`
+            },
+            3: {
+                title: "Task 3: Submission Evidence Capture",
+                body: `<strong>Objective:</strong> Document your successful restoration strategies for assessment.<br><br>
+                       <strong>Submission Instructions:</strong><br>
+                       Achieve a flawless <strong>Optimal Restore Success</strong> state for BOTH Strategy 1 (Differential) and Strategy 2 (Incremental).<br><br>
+                       For each successful pass window, take a clear screenshot showing:<br>
+                       • The configuration layout of your daily dropdown selectors.<br>
+                       • The green success header and verification summary text inside the popup box.<br><br>
+                       Save your images as <em>'Differential_Success_[Name].png'</em> and <em>'Incremental_Success_[Name].png'</em> and send them to your instructor.`
+            }
         };
 
-        let selectedNodes = new Set();
-        const strategySelect = document.getElementById('strategy-select');
-        const timelineGrid = document.getElementById('timeline-grid');
-        const logStream = document.getElementById('log-stream');
-        const btnVerify = document.getElementById('btn-verify');
-        const btnClear = document.getElementById('btn-clear');
+        function showTaskGuide(id) {
+            modalHeader.innerText = taskInstructions[id].title;
+            modalHeader.style.color = "var(--accent-blue)";
+            modalBody.innerHTML = taskInstructions[id].body;
+            modalCloseBtn.onclick = closeDrillModal;
+            modalCloseBtn.innerText = "Close Guide & Resume Lab";
+            modal.style.display = 'flex';
+        }
 
-        // Render the interactive timeline grid map dynamically based on selected option
-        function renderTimeline() {
+        // Generate the custom interaction grid map
+        function initGrid() {
             timelineGrid.innerHTML = '';
-            selectedNodes.clear();
-            const currentStrategy = strategySelect.value;
-            const dataset = backupDataMatrix[currentStrategy];
+            dayIds.forEach((id, idx) => {
+                const card = document.createElement('div');
+                card.className = 'day-node';
+                card.id = `card-${id}`;
 
-            dataset.forEach(item => {
-                const node = document.createElement('div');
-                node.className = 'day-node';
-                node.setAttribute('data-id', item.id);
-                
-                let tagClass = item.type === 'Full' ? 'type-full' : (item.type === 'Differential' ? 'type-diff' : 'type-inc');
-                
-                node.innerHTML = `
-                    <div class="day-name">${item.day}</div>
-                    <span class="backup-type-tag ${tagClass}">${item.type}</span>
-                    <div class="data-size">${item.size}</div>
-                    <div class="hint-text" style="display:none; font-size:0.7rem; color:var(--accent-orange); margin-top:6px;">
-                        Contains: ${item.changes}
+                card.innerHTML = `
+                    <div class="day-name">${dayNames[idx]}</div>
+                    <select class="type-select" id="select-${id}" onchange="logTypeChange('${id}', '${dayNames[idx]}')">
+                        <option value="none">-- Select Type --</option>
+                        <option value="Full">Full</option>
+                        <option value="Differential">Differential</option>
+                        <option value="Incremental">Incremental</option>
+                    </select>
+                    <div class="restore-checkbox-wrapper">
+                        <input type="checkbox" id="check-${id}" onchange="logTapeMount('${id}', '${dayNames[idx]}')">
+                        <label for="check-${id}">Mount Tape</label>
                     </div>
                 `;
-
-                // Hover style hook for embedded tooltips
-                node.addEventListener('mouseenter', () => { node.querySelector('.hint-text').style.display = 'block'; });
-                node.addEventListener('mouseleave', () => { node.querySelector('.hint-text').style.display = 'none'; });
-
-                node.addEventListener('click', () => {
-                    if (node.classList.contains('selected')) {
-                        node.classList.remove('selected');
-                        selectedNodes.delete(item.id);
-                        writeLog(`Tape removed: De-selected ${item.day} archive recovery point.`);
-                    } else {
-                        node.classList.add('selected');
-                        selectedNodes.add(item.id);
-                        writeLog(`Tape mounted: Staging ${item.day} [${item.type}] volume into recovery stream.`);
-                    }
-                });
-
-                timelineGrid.appendChild(node);
+                timelineGrid.appendChild(card);
             });
+        }
+
+        function logTypeChange(id, name) {
+            const val = document.getElementById(`select-${id}`).value;
+            writeLog(`Schedule Update: Assigned ${name} as a [${val.toUpperCase()}] operational window.`);
+        }
+
+        function logTapeMount(id, name) {
+            const active = document.getElementById(`check-${id}`).checked;
+            if (active) writeLog(`Tape Array: Mounted ${name} volume into active restore buffer.`);
+            else writeLog(`Tape Array: De-allocated ${name} volume from restore queue.`);
         }
 
         function writeLog(message) {
@@ -400,85 +444,95 @@
             logStream.scrollTop = logStream.scrollHeight;
         }
 
-        strategySelect.addEventListener('change', () => {
-            renderTimeline();
-            writeLog(`Rotation Shift: Switched context grid to display execution map for [${strategySelect.options[strategySelect.selectedIndex].text}].`);
+        btnReset.addEventListener('click', () => {
+            initGrid();
+            writeLog("System Notification: Reset sequence executed. Rotation layout cleared.");
         });
 
-        btnClear.addEventListener('click', () => {
-            document.querySelectorAll('.day-node').forEach(n => n.classList.remove('selected'));
-            selectedNodes.clear();
-            writeLog("Clear Complete: Active recovery media set reset to zero baseline.");
-        });
-
-        // Main Evaluation Logic Checking for Proper Chains
+        // Combined Evaluation Logic Engine
         btnVerify.addEventListener('click', () => {
-            const currentStrategy = strategySelect.value;
-            const modal = document.getElementById('result-modal');
-            const header = document.getElementById('m-header');
-            const body = document.getElementById('m-body');
+            let config = {};
+            let mounted = {};
 
-            let isSuccess = false;
-            let feedback = "";
+            dayIds.forEach(id => {
+                config[id] = document.getElementById(`select-${id}`).value;
+                mounted[id] = document.getElementById(`check-${id}`).checked;
+            });
 
-            if (currentStrategy === 'diff') {
-                // Differential Strategy Correct Answer: Sunday (Full) + Friday (Differential)
-                const hasSun = selectedNodes.has('sun');
-                const hasFri = selectedNodes.has('fri');
-                const totalSelected = selectedNodes.size;
+            modalHeader.style.color = "var(--accent-red)";
+            modalCloseBtn.innerText = "Modify Sequence Matrix";
+            modalCloseBtn.onclick = closeDrillModal;
 
-                if (hasSun && hasFri && totalSelected === 2) {
-                    isSuccess = true;
-                    feedback = `<strong>RESTORE SUCCESS! (Optimal Chain Verified)</strong><br><br>
-                    Your sequence is correct. Because a **Differential Backup** captures <em>all data changes since the last Full baseline</em>, you only need to mount the Sunday Full tape and the latest Friday Differential tape.<br><br>
-                    • <strong>Total Media Volumes Processed:</strong> 2 Tapes mounted.<br>
-                    • <strong>Restore Overhead:</strong> Low network load. You successfully skipped Monday through Thursday, avoiding redundant restructures.`;
-                } else if (hasSun && hasFri && totalSelected > 2) {
-                    feedback = `<strong>RESTORE COMPLETED (But Sub-Optimal Configuration)</strong><br><br>
-                    The data was recovered, but your architecture failed efficiency checks. You included mid-week differential tapes (Monday-Thursday).<br><br>
-                    ⚠️ <strong>Redundancy Alert:</strong> Since Wednesday's differential already contains all modifications from Monday and Tuesday, processing mid-week tapes wastes time and replicates blocks. You only need the **Full baseline + the latest cumulative volume**.`;
-                } else if (hasSun && !hasFri) {
-                    feedback = `<strong>RESTORE CRASHED: INCOMPLETE DATASET</strong><br><br>
-                    ❌ Recovery Failed. You mounted the Sunday Full baseline database, but you left out the latest Friday differential tape volume. Your data state is stuck 5 days out of date, resulting in severe transactional business losses.`;
-                } else {
-                    feedback = `<strong>RESTORE CRASHED: BROKEN BASELINE</strong><br><br>
-                    ❌ Critical Execution Error. You cannot process differential modification tapes without mounting the original **Sunday Full Backup** snapshot first. The storage recovery engine has nothing to anchor the delta points to.`;
-                }
-            } else if (currentStrategy === 'inc') {
-                // Incremental Strategy Correct Answer: All items must be chosen sequentially (Sunday + Mon + Tue + Wed + Thu + Fri)
-                const hasAll = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri'].every(id => selectedNodes.has(id));
-                const totalSelected = selectedNodes.size;
-
-                if (hasAll && totalSelected === 6) {
-                    isSuccess = true;
-                    feedback = `<strong>RESTORE SUCCESS! (Full Sequential Chain Restored)</strong><br><br>
-                    Your sequence is correct. Because an **Incremental Backup** captures <em>only the block updates made since the immediate previous backup</em>, you must re-play every single interval in the exact order they occurred.<br><br>
-                    • <strong>Total Media Volumes Processed:</strong> 6 Tapes required.<br>
-                    • <strong>System Cost Note:</strong> Incremental strategy keeps the daily backup times incredibly fast and small, but requires more storage management overhead during a disaster recovery lifecycle. If any mid-week tape is lost, the chain is broken!`;
-                } else if (selectedNodes.has('sun') && selectedNodes.has('fri') && totalSelected === 2) {
-                    feedback = `<strong>RESTORE CRASHED: CORRUPT DELTA STRUCTURE</strong><br><br>
-                    ❌ Critical Logic Gap. You selected Sunday and Friday only. Because this rotation relies on **Incremental logs**, Friday's backup only contains changes made between Thursday morning and Friday morning. You are missing all data additions from Monday, Tuesday, Wednesday, and Thursday.`;
-                } else if (selectedNodes.has('sun') && totalSelected < 6) {
-                    feedback = `<strong>RESTORE CRASHED: BROKEN LOG CHAIN</strong><br><br>
-                    ❌ Data Loss Event. You missed steps in the sequential execution pipeline. An incremental structure acts like links in a chain—if you miss even one single day (e.g., leaving out Tuesday), the recovery engine cannot calculate data locations for the following days.`;
-                } else {
-                    feedback = `<strong>RESTORE CRASHED: BROKEN BASELINE</strong><br><br>
-                    ❌ Logic Execution Error. Every backup type strategy requires the **Initial Full Backup Baseline** to anchor the filesystem before applying delta tracks.`;
-                }
+            // Baseline check: Does a Sunday Full backup exist?
+            if (config['sun'] !== 'Full') {
+                modalHeader.innerText = "❌ Restore Failed: Missing Baseline";
+                modalBody.innerHTML = "Critical Error: Every recovery sequence requires an initial **Full Backup Baseline** to anchor the filesystem files before any change logs can be processed.";
+                modal.style.display = 'flex';
+                return;
             }
 
-            header.innerText = isSuccess ? "🟢 Strategy Verification Passed" : "🔴 Restoration Chain Failed Audit";
-            header.style.color = isSuccess ? "var(--accent-green)" : "var(--accent-red)";
-            body.innerHTML = feedback;
+            if (!mounted['sun']) {
+                modalHeader.innerText = "❌ Restore Failed: Broken Baseline Anchor";
+                modalBody.innerHTML = "Critical Error: You configured Sunday as a Full backup, but you did not check its **Mount Tape** box. The recovery engine cannot apply delta points onto an unmounted base database.";
+                modal.style.display = 'flex';
+                return;
+            }
+
+            // Determine what strategy the user has designed based on the Monday-Friday selector states
+            const typesList = dayIds.slice(1).map(id => config[id]);
+            const allDiff = typesList.every(t => t === 'Differential');
+            const allInc = typesList.every(t => t === 'Incremental');
+
+            if (allDiff) {
+                // EVALUATING CUSTOM DIFFERENTIAL CONFIGURATION
+                const totalMounted = Object.values(mounted).filter(Boolean).length;
+                if (mounted['sun'] && mounted['fri'] && totalMounted === 2) {
+                    modalHeader.innerText = "🟢 Optimal Differential Restore Success!";
+                    modalHeader.style.color = "var(--accent-green)";
+                    modalBody.innerHTML = `🏆 <strong>Verification Passed!</strong><br><br>
+                                           Your configuration is fully optimized. Because a <strong>Differential Backup</strong> aggregates all changes made since the last Full baseline, you only need to process the initial Sunday Full tape and the most recent Friday Differential tape volume.<br><br>
+                                           • <strong>Tapes Mounted:</strong> 2 Volumes.<br>
+                                           • <strong>RTO Efficiency:</strong> Maximum. Monday through Thursday were skipped cleanly, avoiding data block overhead.`;
+                } else if (mounted['sun'] && mounted['fri'] && totalMounted > 2) {
+                    modalHeader.innerText = "🟡 Restore Completed With Redundancies";
+                    modalHeader.style.color = "var(--accent-orange)";
+                    modalBody.innerHTML = `⚠️ <strong>Data Restored, But Strategy Sub-Optimal.</strong><br><br>
+                                           The data center is back online, but your recovery pipeline was inefficient. You included mid-week differential tapes (Monday-Thursday). Since Friday's tape already contains those changes, processing middle intervals duplicates operations and hurts your RTO.`;
+                } else {
+                    modalHeader.innerText = "❌ Restore Failed: Incomplete Delta Profile";
+                    modalBody.innerHTML = "Error: You mounted Sunday, but missed the latest Friday tape. Your production data states are stuck five days out of date.";
+                }
+            } else if (allInc) {
+                // EVALUATING CUSTOM INCREMENTAL CONFIGURATION
+                const allMounted = Object.values(mounted).every(Boolean);
+                if (allMounted) {
+                    modalHeader.innerText = "🟢 Optimal Incremental Restore Success!";
+                    modalHeader.style.color = "var(--accent-green)";
+                    modalBody.innerHTML = `🏆 <strong>Verification Passed!</strong><br><br>
+                                           Your sequential recovery chain is complete. Because an <strong>Incremental Backup</strong> logs only what changed since the immediate previous day, you must replay every single day in perfect historical order.<br><br>
+                                           • <strong>Tapes Mounted:</strong> 6 Volumes required.<br>
+                                           • <strong>Risk Parameter:</strong> This keeps daily backup windows incredibly small, but the restoration chain is highly vulnerable. If even a single tape is lost or corrupted, the entire rest of the chain breaks!`;
+                } else if (mounted['sun'] && mounted['fri'] && Object.values(mounted).filter(Boolean).length === 2) {
+                    modalHeader.innerText = "❌ Restore Failed: Corrupt Log Linkage";
+                    modalBody.innerHTML = "Error: You only mounted Sunday and Friday within an Incremental layout. Friday's incremental backup only knows what happened since Thursday. You are missing all data modifications from Monday, Tuesday, Wednesday, and Thursday.";
+                } else {
+                    modalHeader.innerText = "❌ Restore Failed: Broken Log Chain Link";
+                    modalBody.innerHTML = "Error: Missing links detected. An incremental sequence acts like links in a chain. If you fail to mount even one single day (e.g., Tuesday), the recovery controller cannot index the data states for the following days.";
+                }
+            } else {
+                // MISCONFIGURED / MIXED JUMBLED GRID CONTEXT
+                modalHeader.innerText = "❌ Restore Failed: Invalid Rotation Design";
+                modalBody.innerHTML = "Validation Error: Your rotation schedule contains an unaligned mixture of backup types. Standard cloud enterprise operations require a clean, uniform choice between a consistent Differential or Incremental schema to maintain tracking indexes.";
+            }
+
             modal.style.display = 'flex';
         });
 
-        function closeModal() {
-            document.getElementById('result-modal').style.display = 'none';
+        function closeDrillModal() {
+            modal.style.display = 'none';
         }
 
-        // Initialize execution grid on window load
-        window.onload = renderTimeline;
+        window.onload = initGrid;
     </script>
 </body>
 </html>
