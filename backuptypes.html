@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Backup Rotation & Restore Validation Lab</title>
+    <title>Sovereign Backup Types & Restoration Sandbox</title>
     <style>
         :root {
             --bg-dark: #0b0f19;
@@ -60,6 +60,7 @@
             font-size: 0.95rem;
         }
 
+        /* Top-tier Task Navigation Bar */
         .task-bar {
             display: flex;
             gap: 10px;
@@ -318,7 +319,7 @@
         <header>
             <div class="header-info">
                 <h1>Backup Strategy & Restoration Lab</h1>
-                <p>Interactive System Reconstruct and Granular Restoration Verification Sandbox</p>
+                <p>Interactive Custom Rotation Design and Media Chain Verification Sandbox</p>
             </div>
             <div>
                 <span class="badge" style="background-color: #1e3a8a; color: #60a5fa; padding: 6px 12px; font-size: 0.85rem;">Session Module 2</span>
@@ -336,22 +337,24 @@
 
         <div class="workspace-grid">
             
-            <!-- LEFT PANEL: Rotation Policy Selector (First Version Style) -->
+            <!-- LEFT PANEL: Dynamic Target Scenario Controls -->
             <div class="panel">
-                <div class="panel-title">1. Rotation Configurations</div>
+                <div class="panel-title">1. Scenario Configurations</div>
 
                 <div class="setting-control">
-                    <label for="strategy-select">Active Backup Rotation Policy</label>
+                    <label for="strategy-select">Target Scenario Context</label>
+                    <div class="control-purpose">Select the exact incident ticket scenario you are assigned to resolve. The infrastructure logs and daily dataset structures change based on this option.</div>
                     <select id="strategy-select" onchange="switchRotationStrategy()">
-                        <option value="diff">Strategy A: Sunday Full + Daily Differential</option>
-                        <option value="inc">Strategy B: Sunday Full + Daily Incremental</option>
+                        <option value="task1">Task 1: Complete Rebuild (Differential Rotation Model)</option>
+                        <option value="task2">Task 2: Complete Rebuild (Incremental Rotation Model)</option>
+                        <option value="task3">Task 3: Lost Document (Granular Point-in-Time Recovery Challenge)</option>
                     </select>
                 </div>
                 
                 <div class="setting-control">
                     <label>Storage Controller Tracking Logs</label>
-                    <div class="control-purpose">Monitors file sector updates, custom rotation scheduling data changes, and tape drive allocation actions.</div>
-                    <div class="terminal-log" id="log-stream">> Automation system online. Select active policy rotation or launch task guides above...</div>
+                    <div class="control-purpose">Monitors file sector updates, rotation scheduling data changes, and tape drive allocation actions.</div>
+                    <div class="terminal-log" id="log-stream">> Automation system online. Select a scenario context above to stage the workspace...</div>
                 </div>
 
                 <button class="action-btn" id="btn-verify">Initiate Restore Operations</button>
@@ -392,37 +395,33 @@
     </div>
 
     <script>
-        let currentScenario = "system"; // Tracks if user is working on system crash vs. granular file delete
-
-        // Metadata defining daily sizes and contents for standard full crash
-        const standardSystemMatrix = {
-            diff: [
-                { id: "sun", day: "Sunday", type: "Full", size: "500 GB", desc: "Base backup milestone snapshot" },
-                { id: "mon", day: "Monday", type: "Differential", size: "45 GB", desc: "All system updates since Sunday" },
-                { id: "tue", day: "Tuesday", type: "Differential", size: "85 GB", desc: "All system updates since Sunday" },
-                { id: "wed", day: "Wednesday", type: "Differential", size: "120 GB", desc: "All system updates since Sunday" },
-                { id: "thu", day: "Thursday", type: "Differential", size: "165 GB", desc: "All system updates since Sunday" },
-                { id: "fri", day: "Friday", type: "Differential", size: "210 GB", desc: "All system updates since Sunday pre-crash" }
+        // Dedicated daily tracking structures mapped precisely to each corresponding task option context
+        const dynamicScenarioMatrix = {
+            task1: [
+                { id: "sun", day: "Sunday", type: "Full", size: "500 GB", desc: "Base backup milestone baseline snapshot" },
+                { id: "mon", day: "Monday", type: "Differential", size: "45 GB", desc: "All cumulative data additions since Sunday" },
+                { id: "tue", day: "Tuesday", type: "Differential", size: "85 GB", desc: "All cumulative data additions since Sunday" },
+                { id: "wed", day: "Wednesday", type: "Differential", size: "120 GB", desc: "All cumulative data additions since Sunday" },
+                { id: "thu", day: "Thursday", type: "Differential", size: "165 GB", desc: "All cumulative data additions since Sunday" },
+                { id: "fri", day: "Friday", type: "Differential", size: "210 GB", desc: "All cumulative changes since Sunday pre-crash" }
             ],
-            inc: [
-                { id: "sun", day: "Sunday", type: "Full", size: "500 GB", desc: "Base backup milestone snapshot" },
-                { id: "mon", day: "Monday", type: "Incremental", size: "45 GB", desc: "Updates made on Monday only" },
-                { id: "tue", day: "Tuesday", type: "Incremental", size: "40 GB", desc: "Updates made on Tuesday only" },
-                { id: "wed", day: "Wednesday", type: "Incremental", size: "35 GB", desc: "Updates made on Wednesday only" },
-                { id: "thu", day: "Thursday", type: "Incremental", size: "45 GB", desc: "Updates made on Thursday only" },
-                { id: "fri", day: "Friday", type: "Incremental", size: "45 GB", desc: "Updates made on Friday morning only" }
+            task2: [
+                { id: "sun", day: "Sunday", type: "Full", size: "500 GB", desc: "Base backup milestone baseline snapshot" },
+                { id: "mon", day: "Monday", type: "Incremental", size: "45 GB", desc: "Modifications made on Monday only" },
+                { id: "tue", day: "Tuesday", type: "Incremental", size: "40 GB", desc: "Modifications made on Tuesday only" },
+                { id: "wed", day: "Wednesday", type: "Incremental", size: "35 GB", desc: "Modifications made on Wednesday only" },
+                { id: "thu", day: "Thursday", type: "Incremental", size: "45 GB", desc: "Modifications made on Thursday only" },
+                { id: "fri", day: "Friday", type: "Incremental", size: "45 GB", desc: "Modifications made on Friday morning only" }
+            ],
+            task3: [
+                { id: "sun", day: "Sunday", type: "Full", size: "500 GB", desc: "Base repository data snapshot (File does not exist yet)" },
+                { id: "mon", day: "Monday", type: "Differential", size: "45 GB", desc: "Delta dataset updates (File does not exist yet)" },
+                { id: "tue", day: "Tuesday", type: "Differential", size: "85 GB", desc: "Delta dataset updates (File does not exist yet)" },
+                { id: "wed", day: "Wednesday", type: "Differential", size: "120 GB", desc: "Delta dataset updates (File does not exist yet)" },
+                { id: "thu", day: "Thursday", type: "Differential", size: "165 GB", desc: "👉 Target: Holds 'Q3_Proposal.docx' (Saved Thursday 09:00)" },
+                { id: "fri", day: "Friday", type: "Differential", size: "210 GB", desc: "❌ Warning: Capture ran *AFTER* deletion. Holds erase instruction." }
             ]
         };
-
-        // Task 3 context override data matrix
-        const granularFileMatrix = [
-            { id: "sun", day: "Sunday", type: "Full", size: "500 GB", desc: "Base repository snapshot (Does not contain proposal document)" },
-            { id: "mon", day: "Monday", type: "Differential", size: "45 GB", desc: "Delta additions (Does not contain proposal document)" },
-            { id: "tue", day: "Tuesday", type: "Differential", size: "85 GB", desc: "Delta additions (Does not contain proposal document)" },
-            { id: "wed", day: "Wednesday", type: "Differential", size: "120 GB", desc: "Delta additions (Does not contain proposal document)" },
-            { id: "thu", day: "Thursday", type: "Differential", size: "165 GB", desc: "👉 Contains file 'Q3_Proposal.docx' (Created Thursday 09:00)" },
-            { id: "fri", day: "Friday", type: "Differential", size: "210 GB", desc: "❌ Captured AFTER file deletion (Records deletion instruction)" }
-        ];
 
         const logStream = document.getElementById('log-stream');
         const timelineGrid = document.getElementById('timeline-grid');
@@ -439,27 +438,29 @@
         const taskInstructions = {
             1: {
                 title: "Task 1: Differential Complete System Rebuild",
-                body: `<strong>Objective:</strong> Restore the network environment after a full system crash using Strategy A.<br><br>
+                body: `<strong>Objective:</strong> Restore the network environment after a full system crash using a Differential rotation model.<br><br>
                        <strong>Instructions:</strong><br>
-                       1. Set the dropdown choice on the left to <strong>Strategy A (Daily Differential)</strong>.<br>
-                       2. Deduce which specific tapes must be mounted to recover files cleanly up to Friday morning.<br>
-                       3. Check the appropriate boxes on the grid and click <strong>Initiate Restore Operations</strong>.`
+                       1. Set the Target Scenario Context dropdown to <strong>Task 1: Complete Rebuild (Differential)</strong>.<br>
+                       2. Observe how the calendar grid populates with Differential tracking layers.<br>
+                       3. Mount the absolute lowest number of physical tape assets needed to catch up to Friday morning's data state without parsing repeating data layers.<br>
+                       4. Check the appropriate boxes on the grid and click <strong>Initiate Restore Operations</strong>.`
             },
             2: {
                 title: "Task 2: Incremental Complete System Rebuild",
-                body: `<strong>Objective:</strong> Reconstruct the data map step-by-step along an incremental schedule.<br><br>
+                body: `<strong>Objective:</strong> Reconstruct the data map step-by-step along an incremental schedule tracking layout timeline.<br><br>
                        <strong>Instructions:</strong><br>
-                       1. Set the dropdown choice on the left to <strong>Strategy B (Daily Incremental)</strong>.<br>
-                       2. Mount the exact data volumes required to stitch the day-to-day transaction records back together without any gaps.<br>
-                       3. Click verify to analyze the processing overhead.`
+                       1. Set the Target Scenario Context dropdown to <strong>Task 2: Complete Rebuild (Incremental)</strong>.<br>
+                       2. Observe the updates to the daily tape tags and incremental sizes metrics across the workspace track.<br>
+                       3. Mount the exact data volumes required to stitch the day-to-day transaction records back together without any gaps.<br>
+                       4. Click verify to analyze the processing overhead.`
             },
             3: {
                 title: "Task 3: Granular Lost File Restoration Challenge",
                 body: `<strong>Objective:</strong> Recover a single deleted document file from a historical point in time.<br><br>
                        <strong>The Case Brief:</strong> An executive deleted a critical document titled <em>'Q3_Proposal.docx'</em> on Thursday afternoon at 16:00. The file was verified intact during the Thursday morning backup session.<br><br>
                        <strong>Instructions:</strong><br>
-                       1. Clicking this task button has locked your main workspace layout into **Granular File Mode** (note the orange banner).<br>
-                       2. Look closely at the new daily file properties mapped across your grid below.<br>
+                       1. Set the Target Scenario Context dropdown to <strong>Task 3: Lost Document</strong>.<br>
+                       2. Examine the calendar grid. Notice how daily files properties alter to reveal the exact window where the document existed.<br>
                        3. Deduce exactly which minimum tape selection set can recover that proposal file without applying later deletion commands, then click verify.`
             },
             4: {
@@ -467,9 +468,9 @@
                 body: `<strong>Submission Deliverables:</strong><br>
                        You must save and submit clear visual output images of successful operations across all three scenarios.<br><br>
                        <strong>Requirements:</strong><br>
-                       Run through Task 1, Task 2, and Task 3 successfully. For each green popup box you unlock, take a snippet (<strong>Win+Shift+S</strong> or <strong>Cmd+Shift+4</strong>) showing:<br>
-                       • The verification green text banner headers.<br>
-                       • The metrics logs calculated inside the results body card.<br><br>
+                       Run through Task 1, Task 2, and Task 3 successfully by selecting them in the Target Scenario Context selector dropdown. For each green popup box you unlock, take a snippet (<strong>Win+Shift+S</strong> or <strong>Cmd+Shift+4</strong>) demonstrating:<br><br>
+                       • The active scenario chosen inside your left management module panel.<br>
+                       • The green <strong>'Restore Success'</strong> notification header text box showing inside the simulation results window.<br><br>
                        Send your three pass snapshots to your lab instructor for final evaluation and grade sign-off.`
             }
         };
@@ -481,34 +482,35 @@
             modalCloseBtn.onclick = closeDrillModal;
             modalCloseBtn.innerText = "Close Guide & Resume Lab";
             modal.style.display = 'flex';
-
-            // Special Handler: Triggering Task 3 button changes the live environment context instantly
-            if (id === 3) {
-                currentScenario = "file";
-                strategySelect.value = "diff";
-                strategySelect.disabled = true; // Freeze dropdown to enforce task constraint parameters
-                contextBanner.style.borderLeft = "4px solid var(--accent-orange)";
-                contextBanner.innerHTML = "📝 TICKET INCIDENT: Single document 'Q3_Proposal.docx' accidentally deleted on Thursday at 16:00. File was verified intact during Thursday morning backup run.";
-                writeLog("Context Injection: Staging environment shifted to Granular File Recovery Matrix.");
-                renderGrid();
-            }
         }
 
         function switchRotationStrategy() {
-            currentScenario = "system";
-            writeLog(`System: Shifted timeline framework view context to [${strategySelect.options[strategySelect.selectedIndex].text}].`);
+            const context = strategySelect.value;
+            
+            if (context === 'task1') {
+                contextBanner.className = 'crash-banner';
+                contextBanner.style.borderLeft = "none";
+                contextBanner.innerHTML = "⚠️ CRITICAL STORAGE FAULT: Production file array suffered a hardware failure on Friday at 14:00. Production data offline.";
+                writeLog("Context Shift: Staging board initialized for Task 1 (Full System Differential Restore Analysis).");
+            } else if (context === 'task2') {
+                contextBanner.className = 'crash-banner';
+                contextBanner.style.borderLeft = "none";
+                contextBanner.innerHTML = "⚠️ CRITICAL STORAGE FAULT: Production file array suffered a hardware failure on Friday at 14:00. Production data offline.";
+                writeLog("Context Shift: Staging board initialized for Task 2 (Full System Incremental Log Chain Analysis).");
+            } else if (context === 'task3') {
+                contextBanner.className = 'crash-banner';
+                contextBanner.style.borderLeft = "4px solid var(--accent-orange)";
+                contextBanner.innerHTML = "📝 TICKET INCIDENT: Single document 'Q3_Proposal.docx' accidentally deleted on Thursday at 16:00. File was verified intact during Thursday morning backup run.";
+                writeLog("Context Shift: Staging board initialized for Task 3 (Targeted Granular File Extraction Audit).");
+            }
+            
             renderGrid();
         }
 
         function renderGrid() {
             timelineGrid.innerHTML = '';
-            let dataset = [];
-
-            if (currentScenario === "file") {
-                dataset = granularFileMatrix;
-            } else {
-                dataset = standardSystemMatrix[strategySelect.value];
-            }
+            const activeKey = strategySelect.value;
+            const dataset = dynamicScenarioMatrix[activeKey];
 
             dataset.forEach(item => {
                 const card = document.createElement('div');
@@ -538,9 +540,7 @@
         }
 
         btnReset.addEventListener('click', () => {
-            currentScenario = "system";
-            strategySelect.disabled = false;
-            strategySelect.value = "diff";
+            strategySelect.value = "task1";
             contextBanner.className = 'crash-banner';
             contextBanner.style.borderLeft = "none";
             contextBanner.innerHTML = "⚠️ CRITICAL STORAGE FAULT: Production file array suffered a hardware failure on Friday at 14:00. Production data offline.";
@@ -548,8 +548,10 @@
             writeLog("System Update: Staging boards reset to zero baseline system crash metrics.");
         });
 
-        // Calculations Verification Engine
+        // Calculations Verification Logic Engine (Customized per unique chosen dropdown option)
         btnVerify.addEventListener('click', () => {
+            const activeScenario = strategySelect.value;
+            
             let mounted = {
                 sun: document.getElementById('check-sun').checked,
                 mon: document.getElementById('check-mon').checked,
@@ -563,25 +565,25 @@
             modalCloseBtn.innerText = "Modify Sequence Parameters";
             modalCloseBtn.onclick = closeDrillModal;
 
-            // Universal Baseline Guardrail
+            // Universal Baseline Guardrail Rule
             if (!mounted['sun']) {
                 modalHeader.innerText = "❌ Restore Failed: Missing Initial Baseline Anchor";
-                modalBody.innerHTML = "Critical Logic Error: Sunday forms your initial Full baseline backup. You cannot execute deltas or change files if the base filesystem tape is unmounted.";
+                modalBody.innerHTML = "Critical Logic Error: Sunday forms your initial Full baseline backup. You cannot execute deltas or rebuild changes if the base filesystem tracking layer is unmounted.";
                 modal.style.display = 'flex';
                 return;
             }
 
             const totalMounted = Object.values(mounted).filter(Boolean).length;
 
-            if (currentScenario === "file") {
-                // TASK 3: GRANULAR FILE LAB SOLUTION AUDIT
+            if (activeScenario === 'task3') {
+                // HIGHLY SPECIFIC TASK 3 EVALUATION LOGIC
                 if (mounted['sun'] && mounted['thu'] && totalMounted === 2) {
                     modalHeader.innerText = "🟢 Optimal Granular File Restore Success!";
                     modalHeader.style.color = "var(--accent-green)";
                     modalBody.innerHTML = `🏆 <strong>Verification Complete: Targeted Target Recovered!</strong><br><br>
-                                           Excellent work. To extract a document file lost on Thursday afternoon using a Differential framework, you must process the initial Sunday Full baseline and the <strong>Thursday Differential backup volume</strong>.<br><br>
-                                           • <strong>Tapes Mounted:</strong> 2 Volumes.<br>
-                                           • <strong>Audit Status:</strong> PASSED. Friday's tape was properly bypassed because it was generated *after* the deletion, which would cause the system to copy the delete instruction over the clean file.`;
+                                           Excellent engineering. To extract a document file lost on Thursday afternoon using a Differential framework, you must process the initial Sunday Full baseline and the <strong>Thursday Differential backup volume</strong>.<br><br>
+                                           • <strong>Tapes Processed:</strong> 2 Volumes.<br>
+                                           • <strong>Audit Status:</strong> PASSED. Friday's tape was properly bypassed because it was generated *after* the deletion, which would cause the system to copy the delete instruction over the clean file. Bypassing the mid-week tapes optimized your RTO.`;
                 } else if (mounted['sun'] && mounted['fri'] && totalMounted === 2) {
                     modalHeader.innerText = "❌ Restore Failed: Document Extraction Overwritten";
                     modalBody.innerHTML = "Error: You selected Sunday and Friday. Because Friday's differential backup occurred after the user deleted the proposal on Thursday afternoon, Friday's tape contains the record of that deletion. Replaying it instructs the recovery engine to erase the file from your final workspace output.";
@@ -590,42 +592,39 @@
                     modalHeader.style.color = "var(--accent-orange)";
                     modalBody.innerHTML = "Warning: The lost file was safely recovered, but you mounted unnecessary mid-week tapes (Monday-Wednesday). Under a Differential rotation model, Thursday's tape already holds all changes made over the preceding days. Bypassing the middle days maximizes RTO efficiency.";
                 } else {
-                    modalHeader.innerText = "❌ Restore Failed: Invalid Media String Assignment";
+                    modalHeader.innerText = "❌ Restore Failed: Incorrect Extraction Tree";
                     modalBody.innerHTML = "Error: The selected combination of backup tapes does not contain the clean historical files footprint required to pull the document back to its Thursday morning state.";
                 }
-            } else {
-                // TASK 1 & 2: SYSTEM CRASH AUDIT SELECTION
-                const currentStrategy = strategySelect.value;
-
-                if (currentStrategy === 'diff') {
-                    if (mounted['sun'] && mounted['fri'] && totalMounted === 2) {
-                        modalHeader.innerText = "🟢 Optimal Differential Restore Success!";
-                        modalHeader.style.color = "var(--accent-green)";
-                        modalBody.innerHTML = `🏆 <strong>Verification Complete: Optimal Sequence Unlocked!</strong><br><br>
-                                               Your mounting strategy is correct. Under a <strong>Differential Backup</strong> setup, you only need to run the initial Sunday Full baseline tape and the latest Friday cumulative tape to clear a total system crash.<br><br>
-                                               • <strong>Tapes Processed:</strong> 2 Tapes.<br>
-                                               • <strong>Efficiency Index:</strong> Maximum. Monday through Thursday logs were skipped, minimizing storage processing windows.`;
-                    } else if (mounted['sun'] && mounted['fri'] && totalMounted > 2) {
-                        modalHeader.innerText = "🟡 Restore Completed with Redundancies";
-                        modalHeader.style.color = "var(--accent-orange)";
-                        modalBody.innerHTML = "Warning: The system was successfully recovered, but your execution sequence included unnecessary mid-week logs. Under a Differential framework, Friday's tape already includes Monday through Thursday's adjustments. Processing middle days adds redundant operations and increases downtime.";
-                    } else {
-                        modalHeader.innerText = "❌ Restore Failed: Incomplete Delta Profile";
-                        modalBody.innerHTML = "Error: Missing critical segments. You mounted Sunday, but left out the final Friday tape containing the recent week's adjustments.";
-                    }
-                } else if (currentStrategy === 'inc') {
-                    const completeChainMounted = Object.values(mounted).every(Boolean);
-                    if (completeChainMounted) {
-                        modalHeader.innerText = "🟢 Optimal Incremental Restore Success!";
-                        modalHeader.style.color = "var(--accent-green)";
-                        modalBody.innerHTML = `🏆 <strong>Verification Complete: Full Log Chain Restored!</strong><br><br>
-                                               Your sequential pathway is correct. Because an <strong>Incremental Backup</strong> records *only data block adjustments trackable to the immediate previous backup milestone event*, you must mount and process every single day's tape in perfect historical order.<br><br>
-                                               • <strong>Tapes Processed:</strong> 6 Tapes needed.<br>
-                                               • <strong>Risk Parameter:</strong> This keeps daily backup windows incredibly small, but the restoration chain is highly vulnerable. If even a single tape is lost or corrupted, the remaining chain breaks.`;
-                    } else {
-                        modalHeader.innerText = "❌ Restore Failed: Fractured Chain Linkage Detected";
-                        modalBody.innerHTML = "Error: Linkage gap discovered. If you skip even a single interval (e.g., omitting Tuesday), the restoration engine cannot bridge Sunday's data with Wednesday's updates.";
-                    }
+            } else if (activeScenario === 'task1') {
+                // HIGHLY SPECIFIC TASK 1 EVALUATION LOGIC
+                if (mounted['sun'] && mounted['fri'] && totalMounted === 2) {
+                    modalHeader.innerText = "🟢 Optimal Differential Restore Success!";
+                    modalHeader.style.color = "var(--accent-green)";
+                    modalBody.innerHTML = `🏆 <strong>Verification Complete: Optimal Sequence Unlocked!</strong><br><br>
+                                           Your mounting strategy is correct. Under a <strong>Differential Backup</strong> setup, you only need to run the initial Sunday Full baseline tape and the latest Friday cumulative tape to clear a total system crash.<br><br>
+                                           • <strong>Tapes Processed:</strong> 2 Tapes.<br>
+                                           • <strong>Efficiency Index:</strong> Maximum. Monday through Thursday logs were skipped, minimizing storage processing windows and protecting RTO thresholds.`;
+                } else if (mounted['sun'] && mounted['fri'] && totalMounted > 2) {
+                    modalHeader.innerText = "🟡 Restore Completed with Redundancies";
+                    modalHeader.style.color = "var(--accent-orange)";
+                    modalBody.innerHTML = "Warning: The system was successfully recovered, but your execution sequence included unnecessary mid-week logs. Under a Differential framework, Friday's tape already includes Monday through Thursday's adjustments. Processing middle days adds redundant operations and increases downtime.";
+                } else {
+                    modalHeader.innerText = "❌ Restore Failed: Incomplete Delta Profile";
+                    modalBody.innerHTML = "Error: Missing critical segments. You mounted Sunday, but left out the final Friday tape containing the recent week's cumulative tracking metrics adjustments.";
+                }
+            } else if (activeScenario === 'task2') {
+                // HIGHLY SPECIFIC TASK 2 EVALUATION LOGIC
+                const completeChainMounted = Object.values(mounted).every(Boolean);
+                if (completeChainMounted) {
+                    modalHeader.innerText = "🟢 Optimal Incremental Restore Success!";
+                    modalHeader.style.color = "var(--accent-green)";
+                    modalBody.innerHTML = `🏆 <strong>Verification Complete: Full Log Chain Restored!</strong><br><br>
+                                           Your sequential pathway is correct. Because an <strong>Incremental Backup</strong> records *only data block adjustments trackable to the immediate previous backup milestone event*, you must mount and process every single day's tape in perfect historical order.<br><br>
+                                           • <strong>Tapes Processed:</strong> 6 Tapes needed.<br>
+                                           • <strong>Risk Parameter:</strong> This keeps daily backup windows incredibly small, but the restoration chain is highly vulnerable. If even a single tape is lost or corrupted, the remaining chain breaks.`;
+                } else {
+                    modalHeader.innerText = "❌ Restore Failed: Fractured Chain Linkage Detected";
+                    modalBody.innerHTML = "Error: Linkage gap discovered. If you skip even a single interval (e.g., omitting Tuesday), the restoration engine cannot bridge Sunday's data with Wednesday's updates.";
                 }
             }
 
