@@ -60,6 +60,35 @@
             font-size: 0.95rem;
         }
 
+        /* Task navigation dashboard styling */
+        .task-bar {
+            display: flex;
+            gap: 10px;
+            background-color: var(--panel-bg);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #1e293b;
+            align-items: center;
+        }
+
+        .task-btn {
+            background-color: #1e293b;
+            color: var(--accent-blue);
+            border: 1px solid #334155;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+
+        .task-btn:hover {
+            background-color: #334155;
+            color: white;
+            border-color: var(--accent-blue);
+        }
+
         .workspace-grid {
             display: grid;
             grid-template-columns: 380px 1fr 350px;
@@ -340,16 +369,22 @@
             </div>
         </header>
 
+        <div class="task-bar">
+            <span style="font-weight:bold; font-size:0.9rem; color:var(--text-muted); margin-right:10px;">📋 APPRENTICE OBJECTIVES:</span>
+            <button class="task-btn" onclick="showTaskGuide(1)">Task 1: Geo-Topology</button>
+            <button class="task-btn" onclick="showTaskGuide(2)">Task 2: Vulnerability Analysis</button>
+            <button class="task-btn" onclick="showTaskGuide(3)">Task 3: Lab Hardening & Submission</button>
+        </div>
+
         <div class="workspace-grid">
             
-            <!-- LEFT PANEL: Fully Explained Policy Controls -->
             <div class="panel">
                 <div class="panel-title">1. Sovereign Policy Configuration</div>
                 
                 <div class="setting-control">
                     <label>Data Payload Module</label>
                     <div class="control-purpose">The primary raw corporate assets block needing geo-protection.</div>
-                    <div style="background: rgba(15,23,42,0.5); padding: 10px; border-radius: 6px; border: 1px dashed #334155; text-align: center;">
+                    <div style="background: rgba(15, 23, 42, 0.5); padding: 10px; border-radius: 6px; border: 1px dashed #334155; text-align: center;">
                         <div class="data-token" draggable="true" id="source-payload">📦 Core_Sovereign_Data.db</div>
                     </div>
                 </div>
@@ -395,7 +430,6 @@
                 </div>
             </div>
 
-            <!-- CENTER PANEL: Multi-Region Topology Grid -->
             <div class="panel" style="gap: 15px;">
                 <div class="panel-title">2. Geo-Distributed Storage Targets</div>
                 
@@ -404,7 +438,6 @@
                 </p>
 
                 <div class="infra-grid">
-                    <!-- UNITED KINGDOM GRID -->
                     <div class="zone local-zone" id="zone-uk">
                         <div class="zone-header">
                             <span>UK Jurisdiction</span>
@@ -427,7 +460,6 @@
                         </div>
                     </div>
 
-                    <!-- EUROPEAN UNION GRID -->
                     <div class="zone remote-zone" id="zone-eu">
                         <div class="zone-header">
                             <span>EU Jurisdiction</span>
@@ -451,7 +483,6 @@
                     </div>
                 </div>
 
-                <!-- Sovereign Compliance Scoreboard -->
                 <div class="scorecard-grid">
                     <div class="score-box" id="card-copies">
                         <div style="font-size:0.75rem; color:var(--text-muted);">COPIES (Min 3)</div>
@@ -468,7 +499,6 @@
                 </div>
             </div>
 
-            <!-- RIGHT PANEL: Threat Matrix -->
             <div class="panel">
                 <div class="panel-title">3. Threat Matrix Injector</div>
                 
@@ -494,13 +524,12 @@
         </div>
     </div>
 
-    <!-- Results Modal Container -->
     <div class="modal-overlay" id="drill-modal">
         <div class="modal-card">
             <div class="modal-header" id="m-header">Drill Execution Completed</div>
             <div class="modal-body" id="m-body">Simulation results loading...</div>
             <div style="text-align: right;">
-                <button class="modal-close" onclick="closeDrillModal()">Acknowledge & Re-architect</button>
+                <button class="modal-close" id="btn-modal-close" onclick="closeDrillModal()">Acknowledge & Continue</button>
             </div>
         </div>
     </div>
@@ -519,6 +548,55 @@
         const optCrr = document.getElementById('setting-crr');
         const optMfa = document.getElementById('setting-mfa');
         const optThreat = document.getElementById('setting-threat');
+
+        // Text Matrix Guide Object Mapping
+        const taskInstructions = {
+            1: {
+                title: "Task 1: Establish Geo-Distributed Topology Baseline",
+                body: `<strong>Objective:</strong> Provision the primary database to conform to the 3-2-1 standard while honoring international sovereign borders.<br><br>
+                       <strong>Instructions:</strong><br>
+                       1. Drag the 📦 data token onto at least 3 storage boxes.<br>
+                       2. Ensure your architecture includes at least two different media types (Disk, Cloud, or Tape).<br>
+                       3. Distribute the assets across *both* columns (UK and EU grids) until the lower 'GEO-DIVERSITY' metric turns <strong>Green (PASS)</strong>.<br><br>
+                       <em>Dependency Check:</em> Try toggling Cross-Region Replication to 'Enabled' before placing any nodes in the EU grid. Observe the terminal output log.`
+            },
+            2: {
+                title: "Task 2: Vulnerability Analysis & Exploit Verification",
+                body: `<strong>Objective:</strong> Prove how baseline compliance structures collapse without advanced logical policy controls.<br><br>
+                       <strong>Instructions:</strong><br>
+                       1. Deploy your data across 3 infrastructure nodes inside the <strong>UK Jurisdiction only</strong>.<br>
+                       2. Keep all safety options (WORM, CRR, MFA Delete) set to <strong>Disabled</strong>.<br>
+                       3. In Section 3, select the <strong>Catastrophic London Data Center Flood</strong> vector and click 'Fire Disaster Simulation Drill'.<br>
+                       4. Review the failure results card and notice how a localized physical incident completely breaks a localized topology.`
+            },
+            3: {
+                title: "Task 3: Security Hardening & Lab Submission",
+                body: `<strong>Objective:</strong> Deflect all advanced attack arrays, minimize recovery downtime (RTO), and submit evidence.<br><br>
+                       <strong>Instructions:</strong><br>
+                       1. Distribute your storage arrays across both regions. Turn on <strong>WORM, CRR, and MFA Delete</strong> rules.<br>
+                       2. Fire the simulation drills for all scenarios (Ransomware, Insider Threat, Regional Power Outage) until you achieve a <strong>Green (STRATEGY RESILIENT)</strong> pass status.<br><br>
+                       <strong>📸 EVIDENCE SUBMISSION INSTRUCTIONS:</strong><br>
+                       Once you achieve a successful green pass state, hold <strong>Windows Key + Shift + S</strong> (or <strong>Cmd + Shift + 4</strong> on Mac) to take a screenshot of your screen showing:<br>
+                       • The green scorecard compliance metrics tracker blocks.<br>
+                       • The calculated <strong>Achieved RTO & RPO</strong> values inside the completion box.<br><br>
+                       Save this snapshot file as <em>'Sovereign_Lab_Pass_[YourName].png'</em> and send it to your instructor for audit evaluation.`
+            }
+        };
+
+        function showTaskGuide(taskId) {
+            const modal = document.getElementById('drill-modal');
+            const h = document.getElementById('m-header');
+            const b = document.getElementById('m-body');
+            const closeBtn = document.getElementById('btn-modal-close');
+
+            h.innerText = taskInstructions[taskId].title;
+            h.style.color = "var(--accent-blue)";
+            b.innerHTML = taskInstructions[taskId].body;
+            
+            closeBtn.setAttribute('onclick', 'closeDrillModal()');
+            closeBtn.innerText = "Close Guide & Resume Lab";
+            modal.style.display = 'flex';
+        }
 
         retentionSlider.addEventListener('input', (e) => {
             retentionVal.innerText = `${e.target.value} Days rotation`;
@@ -630,120 +708,3 @@
             const isWorm = optImmutable.value === 'enabled';
             const isCrr = optCrr.value === 'enabled';
             const isMfa = optMfa.value === 'enabled';
-            
-            writeLog(`ALERT: Deploying event drill profiles against system grids...`);
-
-            const modal = document.getElementById('drill-modal');
-            const h = document.getElementById('m-header');
-            const b = document.getElementById('m-body');
-
-            const has3Copies = metrics.totalCopies >= 3;
-            const has2Media = metrics.mediaCount >= 2;
-            const hasGeoDiversity = metrics.regionCount >= 2;
-            const fullCompliance = has3Copies && has2Media && hasGeoDiversity;
-
-            let statusTitle = "";
-            let htmlReport = "";
-            let rto = "Infinite";
-            let rpo = "Infinite";
-
-            const rollSurprise = Math.random() < 0.45;
-            
-            if (rollSurprise && Object.keys(infrastructureState).length > 0) {
-                const surpriseRoll = Math.random();
-                if (surpriseRoll < 0.5) {
-                    statusTitle = "💥 UNPREDICTABLE INCIDENT: Solar Flare Event";
-                    h.style.color = "var(--accent-orange)";
-                    rto = "72 Hours"; rpo = "Last Physical Sync";
-                    htmlReport = `<strong>Incident Vector:</strong> An unpredicted coronal mass ejection hits European tracking skies. Magnetic tape layers suffer localized radiation tracking faults.<br><br>
-                    <strong>Recovery Validation:</strong> CLOUD OBJECT LOCK SAVE. While local physical tape libraries suffered metadata corruption, your online active cloud object repositories avoided radiation interference. System failover executed successfully.`;
-                    b.innerHTML = htmlReport;
-                    modal.style.display = 'flex';
-                    writeLog("🚨 CRITICAL CRASH: Geomagnetic solar activity detected.");
-                    return;
-                } else {
-                    statusTitle = "⚓ UNPREDICTABLE INCIDENT: Undersea Fiber Severance";
-                    h.style.color = "var(--accent-orange)";
-                    rto = "12 Hours"; rpo = "Pre-Incident Sync";
-                    htmlReport = `<strong>Incident Vector:</strong> A maritime commercial vessel accidentally drags its anchor line along the seabed floor, severing primary fiber trunk links between London and Frankfurt.<br><br>
-                    <strong>Recovery Validation:</strong> LOCALIZED JURISDICTION SAVE. Inter-region cross-border networks dropped instantly. Because you maintained standalone backup architectures within the home country boundary, local operations continued without falling into infinite remote tracking dependency loops.`;
-                    b.innerHTML = htmlReport;
-                    modal.style.display = 'flex';
-                    writeLog("🚨 CRITICAL DISCONNECT: Inter-region transit trunks severed.");
-                    return;
-                }
-            }
-
-            if (selectedThreat === 'flood') {
-                if (hasGeoDiversity) {
-                    statusTitle = "🟢 STRATEGY RESILIENT (UK Outage - EU Active)";
-                    h.style.color = "var(--accent-green)";
-                    rto = "2 Hours"; rpo = "Near-Zero";
-                    htmlReport = `<strong>Incident Scope:</strong> Massive flooding takes out primary facilities in London. All UK storage nodes drop offline.<br><br>
-                    <strong>Recovery Validation:</strong> SUCCESS. Adhering to geo-diversity guidelines saved operations. European cloud and tape nodes immediately assumed primary transaction recovery roles.`;
-                } else {
-                    statusTitle = "🔴 TOTAL SOVEREIGN LOSS (No EU Geo-redundancy)";
-                    h.style.color = "var(--accent-red)";
-                    htmlReport = `<strong>Incident Scope:</strong> London flooding destroyed local SAN and NAS arrays.<br><br>
-                    <strong>Recovery Validation:</strong> AUDIT FAILURE. You grouped all resources inside one country's borders. With no off-shore replication targets active, your data vanished completely.`;
-                }
-            } 
-            else if (selectedThreat === 'ransomware') {
-                if (fullCompliance && isWorm) {
-                    statusTitle = "🟢 INFRASTRUCTURE SECURED (WORM Enforced)";
-                    h.style.color = "var(--accent-green)";
-                    rto = "1 Hour"; rpo = "Real-time";
-                    htmlReport = `<strong>Incident Scope:</strong> Ransomware targets your cluster and attempts to overwrite files across borders.<br><br>
-                    <strong>Recovery Validation:</strong> SUCCESS. The system blocked malicious write attempts because your **WORM immutability switches were turned on**. Historical data cannot be altered.`;
-                } else {
-                    statusTitle = "🔴 GLOBAL CROSS-BORDER ENCRYPTION";
-                    h.style.color = "var(--accent-red)";
-                    htmlReport = `<strong>Incident Scope:</strong> Ransomware encrypts standard partitions and propagates via active network lanes directly into connected European targets.<br><br>
-                    <strong>Recovery Validation:</strong> COMPROMISED. Without active WORM locks, your secondary cloud replication targets were overwritten by the encryption loop.`;
-                }
-            } 
-            else if (selectedThreat === 'insider') {
-                if (fullCompliance && isMfa) {
-                    statusTitle = "🟢 ATTEMPT BLOCKED (Hardware Token Checked)";
-                    h.style.color = "var(--accent-green)";
-                    rto = "Immediate"; rpo = "Zero Data Loss";
-                    htmlReport = `<strong>Incident Scope:</strong> A rogue employee uses stolen root administrative keys to clear the global backup landscape.<br><br>
-                    <strong>Recovery Validation:</strong> SUCCESS. The cloud architecture rejected the deletion command because it **demanded an out-of-band hardware MFA code** that the bad actor did not possess.`;
-                } else {
-                    statusTitle = "🔴 SYSTEM WIPE (No MFA Delete Active)";
-                    h.style.color = "var(--accent-red)";
-                    htmlReport = `<strong>Incident Scope:</strong> Insider threat successfully calls a programmatic wipe of all connected accounts.<br><br>
-                    <strong>Recovery Validation:</strong> STRATEGIC FAILURE. Admin keys had the absolute power to clear all storage targets across both UK and European sites because no secondary verification gate stopped them.`;
-                }
-            } 
-            else if (selectedThreat === 'regional') {
-                if (fullCompliance && isCrr) {
-                    statusTitle = "🟢 AUTOMATIC GEOGRAPHIC FAILOVER ACTIVE";
-                    h.style.color = "var(--accent-green)";
-                    rto = "15 Minutes"; rpo = "5 Minutes";
-                    htmlReport = `<strong>Incident Scope:</strong> A structural failure crashes the entire power grid across the United Kingdom.<br><br>
-                    <strong>Recovery Validation:</strong> SUCCESS. Because **Cross-Region Replication (CRR)** was fully operational and backed by active European targets, your application state failed over instantly to continental clusters.`;
-                } else {
-                    statusTitle = "🔴 SERVICE STALLED (Single-Jurisdiction Network)";
-                    h.style.color = "var(--accent-orange)";
-                    htmlReport = `<strong>Incident Scope:</strong> Total UK regional blackout.<br><br>
-                    <strong>Recovery Validation:</strong> STALLED. Your data might be safe, but because you turned off Cross-Region Replication or lacked active continental nodes, you cannot point your traffic anywhere else. The company stays offline.`;
-                }
-            }
-
-            htmlReport += `<br><br><div style="display:flex; justify-content:space-around; background:#0f172a; padding:10px; border-radius:6px; border:1px solid #334155;">
-                <div><strong>Achieved RTO:</strong> <span style="color:var(--accent-blue)">${rto}</span></div>
-                <div><strong>Achieved RPO:</strong> <span style="color:var(--accent-blue)">${rpo}</span></div>
-            </div>`;
-
-            b.innerHTML = htmlReport;
-            modal.style.display = 'flex';
-        });
-
-        function closeDrillModal() {
-            document.getElementById('drill-modal').style.display = 'none';
-            writeLog("System: Scenario complete. Resuming proactive sovereign network tracking monitoring...");
-        }
-    </script>
-</body>
-</html>
